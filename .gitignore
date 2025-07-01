@@ -1,3 +1,7 @@
 .env
 data
 docs
+CLAUDE.md
+.idea
+.vscode
+.venv

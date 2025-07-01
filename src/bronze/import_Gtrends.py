@@ -147,7 +147,8 @@ def json_to_parquet(json_data, output_path):
         .withColumn("mois_insert", month(col("date"))) \
         .withColumn("jour_insert", dayofmonth(col("date")))
     print(f"Les données ont été écrites dans {output_path}")
-    spark_manager.write_parquet(df_with_dates, output_path, mode="append", partition_by=["annee_insert", "mois_insert", "jour_insert"])
+    spark_manager.write_parqu
+    et(df_with_dates, output_path, mode="append", partition_by=["annee_insert", "mois_insert", "jour_insert"])
 
 
 # importer les trends sur une plage donné.
