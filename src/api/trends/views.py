@@ -5,6 +5,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework as filters
 from django.db.models import Avg, Sum, Max, Min
 from django.db.models.functions import TruncDate, TruncMonth
+from drf_spectacular.utils import extend_schema, OpenApiParameter
+from drf_spectacular.openapi import OpenApiTypes
 from .models import TrendsFR
 from .serializers import TrendsFRSerializer, TrendsAggregatedSerializer, TrendsTimeSeriesSerializer
 
@@ -23,6 +25,7 @@ class TrendsFRFilter(filters.FilterSet):
         fields = ['country_code', 'keyword', 'date_from', 'date_to', 'search_frequency_min', 'search_frequency_max']
 
 
+@extend_schema(tags=['Google Trends'])
 class TrendsFRListView(generics.ListAPIView):
     """List all trends data with filtering and pagination"""
     queryset = TrendsFR.objects.all()
@@ -33,12 +36,22 @@ class TrendsFRListView(generics.ListAPIView):
     ordering = ['-date']
 
 
+@extend_schema(tags=['Google Trends'])
 class TrendsFRDetailView(generics.RetrieveAPIView):
     """Retrieve a specific trend record"""
     queryset = TrendsFR.objects.all()
     serializer_class = TrendsFRSerializer
 
 
+@extend_schema(
+    tags=['Google Trends'],
+    parameters=[
+        OpenApiParameter('keyword', OpenApiTypes.STR, description='Filter by keyword'),
+        OpenApiParameter('country_code', OpenApiTypes.STR, description='Country code (default: FR)'),
+        OpenApiParameter('date_from', OpenApiTypes.DATE, description='Start date filter'),
+        OpenApiParameter('date_to', OpenApiTypes.DATE, description='End date filter'),
+    ]
+)
 @api_view(['GET'])
 def trends_summary(request):
     """Get summary statistics for trends data"""
@@ -87,6 +100,14 @@ def trends_summary(request):
         )
 
 
+@extend_schema(
+    tags=['Google Trends'],
+    parameters=[
+        OpenApiParameter('country_code', OpenApiTypes.STR, description='Country code (default: FR)'),
+        OpenApiParameter('date_from', OpenApiTypes.DATE, description='Start date filter'),
+        OpenApiParameter('date_to', OpenApiTypes.DATE, description='End date filter'),
+    ]
+)
 @api_view(['GET'])
 def trends_aggregated(request):
     """Get aggregated trends data by keyword"""
@@ -143,6 +164,16 @@ def trends_aggregated(request):
         )
 
 
+@extend_schema(
+    tags=['Google Trends'],
+    parameters=[
+        OpenApiParameter('keyword', OpenApiTypes.STR, description='Keyword (required)', required=True),
+        OpenApiParameter('country_code', OpenApiTypes.STR, description='Country code (default: FR)'),
+        OpenApiParameter('date_from', OpenApiTypes.DATE, description='Start date filter'),
+        OpenApiParameter('date_to', OpenApiTypes.DATE, description='End date filter'),
+        OpenApiParameter('group_by', OpenApiTypes.STR, description='Group by: day or month (default: day)'),
+    ]
+)
 @api_view(['GET'])
 def trends_time_series(request):
     """Get time series data for a specific keyword"""
@@ -218,6 +249,15 @@ def trends_time_series(request):
         )
 
 
+@extend_schema(
+    tags=['Google Trends'],
+    parameters=[
+        OpenApiParameter('country_code', OpenApiTypes.STR, description='Country code (default: FR)'),
+        OpenApiParameter('date_from', OpenApiTypes.DATE, description='Start date filter'),
+        OpenApiParameter('date_to', OpenApiTypes.DATE, description='End date filter'),
+        OpenApiParameter('limit', OpenApiTypes.INT, description='Number of results (default: 10)'),
+    ]
+)
 @api_view(['GET'])
 def trends_top_keywords(request):
     """Get top keywords by search frequency"""

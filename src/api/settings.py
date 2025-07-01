@@ -127,7 +127,7 @@ REST_FRAMEWORK = {
 # Swagger/OpenAPI Settings
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Challenge DL & DI API',
-    'DESCRIPTION': 'API for Google Trends and StackOverflow data analysis',
+    'DESCRIPTION': 'API for multi-source data analysis: Google Trends, StackOverflow Survey, Adzuna Jobs, and Glassdoor Jobs',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
     'COMPONENT_SPLIT_REQUEST': True,
@@ -135,7 +135,32 @@ SPECTACULAR_SETTINGS = {
         'deepLinking': True,
         'persistAuthorization': True,
         'displayOperationId': True,
+        'docExpansion': 'none',
+        'filter': True,
+        'tagsSorter': 'alpha',
     },
+    'TAGS': [
+        {
+            'name': 'Google Trends',
+            'description': 'Google Trends data analysis endpoints - Search frequency trends by keyword and country'
+        },
+        {
+            'name': 'StackOverflow Survey',
+            'description': 'Developer survey data endpoints - Annual survey responses, developer insights, and technology trends'
+        },
+        {
+            'name': 'Adzuna Jobs',
+            'description': 'Job market data from Adzuna - Job listings, salary trends, and market analysis'
+        },
+        {
+            'name': 'Glassdoor Jobs',
+            'description': 'Company and job data from Glassdoor - Job postings, company ratings, and industry insights'
+        },
+        {
+            'name': 'API Info',
+            'description': 'General API information and documentation endpoints'
+        }
+    ],
     'PREPROCESSING_HOOKS': [],
     'POSTPROCESSING_HOOKS': [],
 }

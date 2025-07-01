@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework as filters
 from django.db.models import Avg, Count, Q
+from drf_spectacular.utils import extend_schema, OpenApiParameter
+from drf_spectacular.openapi import OpenApiTypes
 from .models import StackOverflowSurvey
 from .serializers import (
     StackOverflowSurveySerializer, 
@@ -28,6 +30,7 @@ class StackOverflowSurveyFilter(filters.FilterSet):
         fields = ['survey_year', 'country', 'developer_type', 'gender', 'industry']
 
 
+@extend_schema(tags=['StackOverflow Survey'])
 class StackOverflowSurveyListView(generics.ListAPIView):
     """List StackOverflow survey responses with filtering"""
     queryset = StackOverflowSurvey.objects.all()
@@ -38,12 +41,14 @@ class StackOverflowSurveyListView(generics.ListAPIView):
     ordering = ['-survey_year']
 
 
+@extend_schema(tags=['StackOverflow Survey'])
 class StackOverflowSurveyDetailView(generics.RetrieveAPIView):
     """Retrieve a specific survey response"""
     queryset = StackOverflowSurvey.objects.all()
     serializer_class = StackOverflowSurveySerializer
 
 
+@extend_schema(tags=['StackOverflow Survey'])
 @api_view(['GET'])
 def survey_summary(request):
     """Get summary statistics for survey data"""
@@ -66,6 +71,7 @@ def survey_summary(request):
         )
 
 
+@extend_schema(tags=['StackOverflow Survey'])
 @api_view(['GET'])
 def developer_type_stats(request):
     """Get statistics by developer type"""
@@ -83,6 +89,7 @@ def developer_type_stats(request):
         )
 
 
+@extend_schema(tags=['StackOverflow Survey'])
 @api_view(['GET'])
 def technology_stats(request):
     """Get technology usage statistics"""
@@ -100,6 +107,7 @@ def technology_stats(request):
         )
 
 
+@extend_schema(tags=['StackOverflow Survey'])
 @api_view(['GET'])
 def salary_analysis(request):
     """Get salary analysis by various factors"""

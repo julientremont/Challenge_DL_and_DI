@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework as filters
 from django.db.models import Avg, Count, Q
+from drf_spectacular.utils import extend_schema, OpenApiParameter
+from drf_spectacular.openapi import OpenApiTypes
 from .models import GlassdoorJob, GlassdoorCompanyReview
 from .serializers import (
     GlassdoorJobSerializer,
@@ -41,6 +43,7 @@ class GlassdoorJobFilter(filters.FilterSet):
         fields = ['country', 'industry', 'company_size', 'company_type', 'easy_apply']
 
 
+@extend_schema(tags=['Glassdoor Jobs'])
 class GlassdoorJobListView(generics.ListAPIView):
     """List Glassdoor jobs with filtering"""
     queryset = GlassdoorJob.objects.all()
@@ -51,12 +54,14 @@ class GlassdoorJobListView(generics.ListAPIView):
     ordering = ['-posted_date']
 
 
+@extend_schema(tags=['Glassdoor Jobs'])
 class GlassdoorJobDetailView(generics.RetrieveAPIView):
     """Retrieve a specific job posting"""
     queryset = GlassdoorJob.objects.all()
     serializer_class = GlassdoorJobSerializer
 
 
+@extend_schema(tags=['Glassdoor Jobs'])
 @api_view(['GET'])
 def jobs_summary(request):
     """Get summary statistics for Glassdoor job data"""
@@ -83,6 +88,7 @@ def jobs_summary(request):
         )
 
 
+@extend_schema(tags=['Glassdoor Jobs'])
 @api_view(['GET'])
 def company_stats(request):
     """Get statistics by company"""
@@ -100,6 +106,7 @@ def company_stats(request):
         )
 
 
+@extend_schema(tags=['Glassdoor Jobs'])
 @api_view(['GET'])
 def industry_analysis(request):
     """Get industry-based analysis"""
@@ -117,6 +124,7 @@ def industry_analysis(request):
         )
 
 
+@extend_schema(tags=['Glassdoor Jobs'])
 @api_view(['GET'])
 def location_analysis(request):
     """Get location-based job analysis"""
@@ -134,6 +142,7 @@ def location_analysis(request):
         )
 
 
+@extend_schema(tags=['Glassdoor Jobs'])
 @api_view(['GET'])
 def salary_rating_correlation(request):
     """Analyze correlation between company rating and salary"""
@@ -151,6 +160,7 @@ def salary_rating_correlation(request):
         )
 
 
+@extend_schema(tags=['Glassdoor Jobs'])
 @api_view(['GET'])
 def company_insights(request):
     """Get detailed company insights including reviews"""

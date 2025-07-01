@@ -2,8 +2,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.http import JsonResponse
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
+from drf_spectacular.utils import extend_schema
+from rest_framework.decorators import api_view
 
 
+@extend_schema(tags=['API Info'])
+@api_view(['GET'])
 def api_root(request):
     """API root endpoint with available endpoints"""
     return JsonResponse({

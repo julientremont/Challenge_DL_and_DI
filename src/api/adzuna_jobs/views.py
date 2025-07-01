@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework as filters
 from django.db.models import Avg, Count, Q
+from drf_spectacular.utils import extend_schema, OpenApiParameter
+from drf_spectacular.openapi import OpenApiTypes
 from .models import AdzunaJob, AdzunaJobCategory
 from .serializers import (
     AdzunaJobSerializer,
@@ -34,6 +36,7 @@ class AdzunaJobFilter(filters.FilterSet):
         fields = ['country', 'job_type', 'experience_level', 'remote_allowed']
 
 
+@extend_schema(tags=['Adzuna Jobs'])
 class AdzunaJobListView(generics.ListAPIView):
     """List Adzuna jobs with filtering"""
     queryset = AdzunaJob.objects.all()
@@ -44,12 +47,14 @@ class AdzunaJobListView(generics.ListAPIView):
     ordering = ['-posted_date']
 
 
+@extend_schema(tags=['Adzuna Jobs'])
 class AdzunaJobDetailView(generics.RetrieveAPIView):
     """Retrieve a specific job posting"""
     queryset = AdzunaJob.objects.all()
     serializer_class = AdzunaJobSerializer
 
 
+@extend_schema(tags=['Adzuna Jobs'])
 @api_view(['GET'])
 def jobs_summary(request):
     """Get summary statistics for job data"""
@@ -75,6 +80,7 @@ def jobs_summary(request):
         )
 
 
+@extend_schema(tags=['Adzuna Jobs'])
 @api_view(['GET'])
 def jobs_by_location(request):
     """Get job statistics by location"""
@@ -92,6 +98,7 @@ def jobs_by_location(request):
         )
 
 
+@extend_schema(tags=['Adzuna Jobs'])
 @api_view(['GET'])
 def jobs_by_company(request):
     """Get job statistics by company"""
@@ -109,6 +116,7 @@ def jobs_by_company(request):
         )
 
 
+@extend_schema(tags=['Adzuna Jobs'])
 @api_view(['GET'])
 def salary_trends(request):
     """Get salary trend analysis"""
@@ -128,6 +136,7 @@ def salary_trends(request):
         )
 
 
+@extend_schema(tags=['Adzuna Jobs'])
 @api_view(['GET'])
 def skills_analysis(request):
     """Get skills demand analysis"""
