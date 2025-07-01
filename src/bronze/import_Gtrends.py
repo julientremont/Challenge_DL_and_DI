@@ -1,14 +1,9 @@
 from pyspark.sql.functions import col, year, month, dayofmonth, to_date
-from datetime import datetime, timedelta
 from pytrends.request import TrendReq
 from calendar import monthrange
-import random
-import time
-import json
 
-from ..utils.sparkmanager import spark_manager
 
-output_path = "./data/bronze/gtrends"
+from src.utils.sparkmanager import spark_manager
 
 keywords_techs = [
     # Langages de programmation populaires
@@ -17,8 +12,7 @@ keywords_techs = [
     
     # Frameworks et bibliothèques web
     'react', 'angular', 'vue.js', 'django',]
-country_codes = [ "FR"
-]
+country_codes = [ "FR"]
 
 
 def get_trends_histo(keywords_techs, country_codes, start_date, end_date):
@@ -65,7 +59,7 @@ def get_trends_histo(keywords_techs, country_codes, start_date, end_date):
                                 "isPartial": row['isPartial']
                             }
                             # Sauvegarder en parquet
-                            output_paths = f"./datas/bronze/gtrends/{country_code}/{keywords_tech}"
+                            output_paths = f"../../data/bronze/gtrends/{country_code}/{keywords_tech}"
                             json_to_parquet(data_point, output_paths)
                             
                         pause2 = random.uniform(1, 1)
@@ -152,9 +146,8 @@ def json_to_parquet(json_data, output_path):
         .withColumn("annee_insert", year(col("date"))) \
         .withColumn("mois_insert", month(col("date"))) \
         .withColumn("jour_insert", dayofmonth(col("date")))
-    df_with_dates.write.mode("append").partitionBy("annee_insert", "mois_insert", "jour_insert").parquet(output_path)
     print(f"Les données ont été écrites dans {output_path}")
-
+    spark_manager.write_parquet(df_with_dates, output_path, mode="append", partition_by=["annee_insert", "mois_insert", "jour_insert"])
 
 
 # importer les trends sur une plage donné.
