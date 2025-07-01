@@ -1,0 +1,13 @@
+# Core dependencies
+pyspark>=3.4.0
+python-dotenv>=1.0.0
+
+# MySQL connectivity
+mysql-connector-python>=8.0.33
+
+# Data processing and trends
+pytrends>=4.9.0
+pandas>=1.5.0
+
+# Optional: For enhanced logging and monitoring
+py4j>=0.10.9
