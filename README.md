@@ -11,3 +11,22 @@ CREATE TABLE silver.Trends_FR (
     INDEX idx_date (date),
     INDEX idx_keyword (keyword)
 );
+
+CREATE TABLE silver.it_jobs_salary (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    country VARCHAR(100) NOT NULL,
+    country_code VARCHAR(10) NOT NULL,
+    job_title VARCHAR(100) NOT NULL,
+    job_count DECIMAL(10,1),
+    salary_range INT,
+	date DATE NOT NULL
+);
+
+CREATE TABLE salary_it_jobs (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    country VARCHAR(100) NOT NULL,
+    country_code VARCHAR(10) NOT NULL,
+	job_title VARCHAR(100) NOT NULL,
+    average_salary DECIMAL(10,2) NOT NULL,
+    date DATE NOT NULL
+);

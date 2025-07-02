@@ -1,6 +1,9 @@
 from pyspark.sql.functions import col, year, month, dayofmonth, to_date
 from pytrends.request import TrendReq
+import os
+import sys
 from calendar import monthrange
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 from src.utils.sparkmanager import spark_manager
 from datetime import datetime, timedelta
 import time
@@ -14,7 +17,7 @@ keywords_techs = [
     
     # Frameworks et bibliothèques web
     'react', 'angular', 'vue.js', 'django',]
-country_codes = [ "FR"]
+country_codes = ["AT", "BE", "CH", "DE", "ES", "GB", "IT", "NL", "PL"]
 
 
 def get_trends_histo(keywords_techs, country_codes, start_date, end_date):
