@@ -2,7 +2,7 @@ import logging
 from typing import Optional, Dict, Any
 from pyspark.sql import SparkSession, DataFrame
 from pyspark.sql.types import StructType
-from .config import config
+from src.utils.config import config
 
 
 class SparkManager:
@@ -31,13 +31,17 @@ class SparkManager:
             
             for key, value in spark_config.items():
                 builder = builder.config(key, value)
+
+            builder  = builder.master("local[1]")
             
             builder = builder.config("spark.jars.packages", "mysql:mysql-connector-java:8.0.33")
             
             builder = builder.config("spark.sql.adaptive.enabled", "true")
             builder = builder.config("spark.sql.adaptive.coalescePartitions.enabled", "true")
             builder = builder.config("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-            
+            builder = builder.config("spark.sql.execution.pyspark.udf.faulthandler.enabled", "true")
+            builder = builder.config("spark.python.worker.faulthandler.enabled", "true")
+
             self._spark_session = builder.getOrCreate()
             self._spark_session.sparkContext.setLogLevel("WARN")
             
@@ -60,11 +64,7 @@ class SparkManager:
                 self._spark_session = None
                 self._is_initialized = False
     
-    def restart_session(self) -> SparkSession:
-        """Redémarre la session Spark"""
-        self.stop_session()
-        return self.get_session()
-    
+
     def is_session_active(self) -> bool:
         """Vérifie si la session Spark est active"""
         try:
@@ -73,85 +73,7 @@ class SparkManager:
         except:
             return False
     
-    def read_from_mysql(self, query: str, table: Optional[str] = None) -> DataFrame:
-        """Lit des données depuis MySQL via JDBC"""
-        spark = self.get_session()
-        
-        jdbc_properties = {
-            "user": self.config.mysql_user,
-            "password": self.config.mysql_password,
-            "driver": "com.mysql.cj.jdbc.Driver"
-        }
-        
-        jdbc_url = f"jdbc:mysql://{self.config.mysql_host}:{self.config.mysql_port}/{self.config.mysql_database}"
-        
-        try:
-            if query:
-                # Lecture avec requête personnalisée
-                df = spark.read.format("jdbc") \
-                    .option("url", jdbc_url) \
-                    .option("query", query) \
-                    .option("user", self.config.mysql_user) \
-                    .option("password", self.config.mysql_password) \
-                    .option("driver", "com.mysql.cj.jdbc.Driver") \
-                    .load()
-            elif table:
-                # Lecture d'une table complète
-                df = spark.read.format("jdbc") \
-                    .option("url", jdbc_url) \
-                    .option("dbtable", table) \
-                    .option("user", self.config.mysql_user) \
-                    .option("password", self.config.mysql_password) \
-                    .option("driver", "com.mysql.cj.jdbc.Driver") \
-                    .load()
-            else:
-                raise ValueError("Soit 'query' soit 'table' doit être spécifié")
-            
-            self.logger.info(f"Données lues depuis MySQL: {df.count()} lignes")
-            return df
-            
-        except Exception as e:
-            self.logger.error(f"Erreur lors de la lecture MySQL: {e}")
-            raise
-    
-    def write_to_mysql(self, df: DataFrame, table: str, mode: str = "append") -> None:
-        """Écrit un DataFrame vers MySQL"""
-        jdbc_url = f"jdbc:mysql://{self.config.mysql_host}:{self.config.mysql_port}/{self.config.mysql_database}"
-        
-        jdbc_properties = {
-            "user": self.config.mysql_user,
-            "password": self.config.mysql_password,
-            "driver": "com.mysql.cj.jdbc.Driver"
-        }
-        
-        try:
-            df.write.format("jdbc") \
-                .option("url", jdbc_url) \
-                .option("dbtable", table) \
-                .option("user", self.config.mysql_user) \
-                .option("password", self.config.mysql_password) \
-                .option("driver", "com.mysql.cj.jdbc.Driver") \
-                .mode(mode) \
-                .save()
-            
-            self.logger.info(f"Données écrites vers MySQL table '{table}': {df.count()} lignes")
-            
-        except Exception as e:
-            self.logger.error(f"Erreur lors de l'écriture MySQL: {e}")
-            raise
-    
-    def read_parquet(self, path: str) -> DataFrame:
-        """Lit un fichier Parquet"""
-        try:
-            spark = self.get_session()
-            df = spark.read.parquet(path)
-            self.logger.info(f"Fichier Parquet lu: {path}, {df.count()} lignes")
-            return df
-        except Exception as e:
-            self.logger.error(f"Erreur lors de la lecture Parquet: {e}")
-            raise
-    
-    def write_parquet(self, df: DataFrame, path: str, mode: str = "overwrite", 
+    def write_parquet(self, df: DataFrame, path: str, mode: str = "overwrite",
                      partition_by: Optional[list] = None) -> None:
         """Écrit un DataFrame en format Parquet"""
         try:
@@ -167,38 +89,6 @@ class SparkManager:
             self.logger.error(f"Erreur lors de l'écriture Parquet: {e}")
             raise
     
-    def validate_dataframe(self, df: DataFrame, required_columns: list) -> bool:
-        """Valide qu'un DataFrame contient les colonnes requises"""
-        df_columns = set(df.columns)
-        required_columns_set = set(required_columns)
-        
-        missing_columns = required_columns_set - df_columns
-        
-        if missing_columns:
-            self.logger.error(f"Colonnes manquantes: {missing_columns}")
-            return False
-        
-        self.logger.info("Validation DataFrame réussie")
-        return True
-    
-    def get_session_info(self) -> Dict[str, Any]:
-        """Retourne les informations de la session Spark"""
-        if not self.is_session_active():
-            return {"status": "inactive"}
-        
-        spark = self.get_session()
-        return {
-            "status": "active",
-            "app_name": spark.sparkContext.appName,
-            "app_id": spark.sparkContext.applicationId,
-            "master": spark.sparkContext.master,
-            "ui_enabled": self.config.spark_ui_enabled,
-            "ui_port": self.config.spark_ui_port if self.config.spark_ui_enabled else None,
-            "driver_memory": self.config.spark_driver_memory,
-            "executor_memory": self.config.spark_executor_memory,
-            "executor_cores": self.config.spark_executor_cores
-        }
-    
     def __enter__(self):
         """Support du context manager"""
         return self
@@ -208,5 +98,4 @@ class SparkManager:
         self.stop_session()
 
 
-# Instance globale pour faciliter l'utilisation
 spark_manager = SparkManager()

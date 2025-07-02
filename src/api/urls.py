@@ -21,6 +21,7 @@ def api_root(request):
             'stackoverflow_survey': '/api/stackoverflow-survey/',
             'adzuna_jobs': '/api/adzuna-jobs/',
             'glassdoor_jobs': '/api/glassdoor-jobs/',
+            'github_repos': '/api/github-repos/',
         },
         'data_sources': {
             'google_trends': {
@@ -38,6 +39,10 @@ def api_root(request):
             'glassdoor_jobs': {
                 'base_url': '/api/glassdoor-jobs/',
                 'endpoints': ['/', '/summary/', '/company-stats/', '/industry-analysis/', '/location-analysis/', '/salary-rating-correlation/', '/company-insights/']
+            },
+            'github_repos': {
+                'base_url': '/api/github-repos/',
+                'endpoints': ['/', '/summary/', '/technology-stats/', '/activity-analysis/', '/time-series/', '/popular/']
             }
         }
     })
@@ -52,6 +57,7 @@ urlpatterns = [
     path('api/stackoverflow-survey/', include('src.api.stackoverflow_survey.urls')),
     path('api/adzuna-jobs/', include('src.api.adzuna_jobs.urls')),
     path('api/glassdoor-jobs/', include('src.api.glassdoor_jobs.urls')),
+    path('api/github-repos/', include('src.api.github_jobs.urls')),
     
     # Swagger/OpenAPI URLs
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),

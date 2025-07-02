@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'src.api.stackoverflow_survey',
     'src.api.adzuna_jobs',
     'src.api.glassdoor_jobs',
+    'src.api.github_jobs',
 ]
 
 MIDDLEWARE = [
