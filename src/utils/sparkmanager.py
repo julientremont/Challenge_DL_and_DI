@@ -4,7 +4,6 @@ from pyspark.sql import SparkSession, DataFrame
 from pyspark.sql.types import StructType
 from src.utils.config import config
 
-
 class SparkManager:
     """Gestionnaire de session Spark avec intégration MySQL et utilitaires de traitement de données"""
     
@@ -26,6 +25,7 @@ class SparkManager:
         """Crée une nouvelle session Spark avec la configuration .env"""
         try:
             spark_config = self.config.get_spark_config()
+            jar_path = r"C:\drivers\mysql-connector-java-8.0.33.jar"
             
             builder = SparkSession.builder.appName(self.app_name)
             
@@ -34,6 +34,12 @@ class SparkManager:
 
             builder  = builder.master("local[1]")
             
+            # Configuration du driver MySQL avec JAR local
+            builder = builder.config("spark.jars", jar_path)
+            builder = builder.config("spark.driver.extraClassPath", jar_path)
+            builder = builder.config("spark.executor.extraClassPath", jar_path)
+            
+            # Alternative Maven (gardez cette ligne au cas où)
             builder = builder.config("spark.jars.packages", "mysql:mysql-connector-java:8.0.33")
             
             builder = builder.config("spark.sql.adaptive.enabled", "true")
@@ -45,13 +51,19 @@ class SparkManager:
             self._spark_session = builder.getOrCreate()
             self._spark_session.sparkContext.setLogLevel("WARN")
             
+            # Test de vérification du driver MySQL
+            try:
+                self._spark_session._jvm.Class.forName("com.mysql.cj.jdbc.Driver")
+                self.logger.info("✓ Driver MySQL chargé avec succès")
+            except Exception as driver_error:
+                self.logger.warning(f"⚠ Driver MySQL non trouvé: {driver_error}")
+            
             self.logger.info(f"Session Spark créée avec succès: {self.app_name}")
             return self._spark_session
             
         except Exception as e:
             self.logger.error(f"Erreur lors de la création de la session Spark: {e}")
             raise
-    
     def stop_session(self) -> None:
         """Arrête la session Spark"""
         if self._spark_session:
