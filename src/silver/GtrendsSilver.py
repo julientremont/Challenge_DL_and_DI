@@ -1,5 +1,5 @@
-from pyspark.sql.functions import col, when, isnan, isnull, sum as spark_sum
-from pyspark.sql.types import NumericType, DoubleType, FloatType
+import sys
+
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
 from dotenv import load_dotenv
@@ -7,7 +7,6 @@ from functools import reduce
 import operator
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-from src.utils.sparkmanager import spark_manager
 
 # Charger les variables d'environnement
 load_dotenv()

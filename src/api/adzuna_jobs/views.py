@@ -1,5 +1,5 @@
 from rest_framework import generics, status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework as filters
@@ -15,6 +15,7 @@ from .serializers import (
     SalaryTrendsSerializer,
     AdzunaJobCategorySerializer
 )
+from ..permissions import AdminOnlyPermission, AuthenticatedReadOnlyPermission
 
 
 class AdzunaJobFilter(filters.FilterSet):
@@ -45,6 +46,7 @@ class AdzunaJobListView(generics.ListAPIView):
     filterset_class = AdzunaJobFilter
     ordering_fields = ['posted_date', 'salary_min', 'salary_max']
     ordering = ['-posted_date']
+    permission_classes = [AuthenticatedReadOnlyPermission]
 
 
 @extend_schema(tags=['Adzuna Jobs'])
@@ -52,10 +54,12 @@ class AdzunaJobDetailView(generics.RetrieveAPIView):
     """Retrieve a specific job posting"""
     queryset = AdzunaJob.objects.all()
     serializer_class = AdzunaJobSerializer
+    permission_classes = [AuthenticatedReadOnlyPermission]
 
 
 @extend_schema(tags=['Adzuna Jobs'])
 @api_view(['GET'])
+@permission_classes([AdminOnlyPermission])
 def jobs_summary(request):
     """Get summary statistics for job data"""
     try:
@@ -82,6 +86,7 @@ def jobs_summary(request):
 
 @extend_schema(tags=['Adzuna Jobs'])
 @api_view(['GET'])
+@permission_classes([AdminOnlyPermission])
 def jobs_by_location(request):
     """Get job statistics by location"""
     try:
@@ -100,6 +105,7 @@ def jobs_by_location(request):
 
 @extend_schema(tags=['Adzuna Jobs'])
 @api_view(['GET'])
+@permission_classes([AdminOnlyPermission])
 def jobs_by_company(request):
     """Get job statistics by company"""
     try:
@@ -118,6 +124,7 @@ def jobs_by_company(request):
 
 @extend_schema(tags=['Adzuna Jobs'])
 @api_view(['GET'])
+@permission_classes([AdminOnlyPermission])
 def salary_trends(request):
     """Get salary trend analysis"""
     try:
@@ -138,6 +145,7 @@ def salary_trends(request):
 
 @extend_schema(tags=['Adzuna Jobs'])
 @api_view(['GET'])
+@permission_classes([AdminOnlyPermission])
 def skills_analysis(request):
     """Get skills demand analysis"""
     try:

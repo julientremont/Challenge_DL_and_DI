@@ -1,5 +1,5 @@
 from rest_framework import generics, status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework as filters
@@ -17,6 +17,7 @@ from .serializers import (
     StackOverflowSurveySummarySerializer, DeveloperRoleStatsSerializer,
     TechnologyStatsSerializer, SalaryAnalysisSerializer, CountryStatsSerializer
 )
+from ..permissions import AdminOnlyPermission, AuthenticatedReadOnlyPermission
 
 
 class StackOverflowSurveyFilter(filters.FilterSet):
@@ -52,6 +53,7 @@ class StackOverflowSurveyListView(generics.ListAPIView):
     filterset_class = StackOverflowSurveyFilter
     ordering_fields = ['survey_year', 'salary_usd_cleaned', 'data_quality_score', 'processed_at']
     ordering = ['-survey_year', '-data_quality_score']
+    permission_classes = [AuthenticatedReadOnlyPermission]
 
 
 @extend_schema(tags=['StackOverflow Survey'])
@@ -59,6 +61,7 @@ class StackOverflowSurveyDetailView(generics.RetrieveAPIView):
     """Retrieve a specific StackOverflow survey response"""
     queryset = StackOverflowSurvey.objects.all()
     serializer_class = StackOverflowSurveySerializer
+    permission_classes = [AuthenticatedReadOnlyPermission]
 
 
 @extend_schema(
@@ -72,6 +75,7 @@ class StackOverflowSurveyDetailView(generics.RetrieveAPIView):
     ]
 )
 @api_view(['GET'])
+@permission_classes([AdminOnlyPermission])
 def stackoverflow_survey_summary(request):
     """Get comprehensive summary statistics for StackOverflow survey data"""
     try:
@@ -165,6 +169,7 @@ def stackoverflow_survey_summary(request):
     ]
 )
 @api_view(['GET'])
+@permission_classes([AdminOnlyPermission])
 def developer_role_stats(request):
     """Get statistics aggregated by developer role"""
     try:
@@ -255,6 +260,7 @@ def developer_role_stats(request):
     ]
 )
 @api_view(['GET'])
+@permission_classes([AdminOnlyPermission])
 def technology_stats(request):
     """Get statistics for technology usage and associated salaries"""
     try:
@@ -353,6 +359,7 @@ def technology_stats(request):
     ]
 )
 @api_view(['GET'])
+@permission_classes([AdminOnlyPermission])
 def salary_analysis(request):
     """Get detailed salary analysis by ranges and associated data"""
     try:
@@ -446,6 +453,7 @@ def salary_analysis(request):
     ]
 )
 @api_view(['GET'])
+@permission_classes([AdminOnlyPermission])
 def country_stats(request):
     """Get statistics aggregated by country"""
     try:

@@ -1,5 +1,5 @@
 from rest_framework import generics, status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework as filters
@@ -9,6 +9,7 @@ from drf_spectacular.utils import extend_schema, OpenApiParameter
 from drf_spectacular.openapi import OpenApiTypes
 from .models import TrendsFR
 from .serializers import TrendsFRSerializer, TrendsAggregatedSerializer, TrendsTimeSeriesSerializer
+from ..permissions import AdminOnlyPermission, AuthenticatedReadOnlyPermission
 
 
 class TrendsFRFilter(filters.FilterSet):
@@ -34,6 +35,7 @@ class TrendsFRListView(generics.ListAPIView):
     filterset_class = TrendsFRFilter
     ordering_fields = ['date', 'search_frequency', 'keyword']
     ordering = ['-date']
+    permission_classes = [AuthenticatedReadOnlyPermission]
 
 
 @extend_schema(tags=['Google Trends'])
@@ -41,6 +43,7 @@ class TrendsFRDetailView(generics.RetrieveAPIView):
     """Retrieve a specific trend record"""
     queryset = TrendsFR.objects.all()
     serializer_class = TrendsFRSerializer
+    permission_classes = [AuthenticatedReadOnlyPermission]
 
 
 @extend_schema(
@@ -53,6 +56,7 @@ class TrendsFRDetailView(generics.RetrieveAPIView):
     ]
 )
 @api_view(['GET'])
+@permission_classes([AdminOnlyPermission])
 def trends_summary(request):
     """Get summary statistics for trends data"""
     try:
@@ -109,6 +113,7 @@ def trends_summary(request):
     ]
 )
 @api_view(['GET'])
+@permission_classes([AdminOnlyPermission])
 def trends_aggregated(request):
     """Get aggregated trends data by keyword"""
     try:
@@ -175,6 +180,7 @@ def trends_aggregated(request):
     ]
 )
 @api_view(['GET'])
+@permission_classes([AdminOnlyPermission])
 def trends_time_series(request):
     """Get time series data for a specific keyword"""
     try:
@@ -259,6 +265,7 @@ def trends_time_series(request):
     ]
 )
 @api_view(['GET'])
+@permission_classes([AdminOnlyPermission])
 def trends_top_keywords(request):
     """Get top keywords by search frequency"""
     try:

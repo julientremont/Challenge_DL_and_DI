@@ -3,25 +3,20 @@ import time
 import random
 import pandas as pd
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import List, Dict, Any
 
-# Technologies to search for
 TECHNOLOGIES = [
-    # Programming languages
     'python', 'javascript', 'java', 'typescript', 'c++', 'c#', 'php', 'ruby', 'go', 'rust', 'kotlin',
     'swift', 'scala', 'dart', 'elixir', 'haskell', 'clojure', 'lua', 'perl', 'r', 'matlab',
     
-    # Frameworks and libraries
     'react', 'angular', 'vue', 'django', 'flask', 'spring', 'laravel', 'rails', 'express',
     'nextjs', 'nuxt', 'svelte', 'jquery', 'bootstrap', 'tailwind',
     
-    # Tools and platforms
     'docker', 'kubernetes', 'tensorflow', 'pytorch', 'spark', 'elasticsearch',
     'mongodb', 'postgresql', 'mysql', 'redis', 'nginx', 'apache'
 ]
 
-# GitHub API configuration
 GITHUB_API_BASE = "https://api.github.com"
 SEARCH_ENDPOINT = f"{GITHUB_API_BASE}/search/repositories"
 REPOS_ENDPOINT = f"{GITHUB_API_BASE}/repos"
@@ -59,7 +54,6 @@ class GitHubRepoCollector:
                         repo_data = self.extract_repo_data(repo, language)
                         all_repos.append(repo_data)
                     
-                    # Check if we have more pages
                     if len(repos) < per_page:
                         break
                         
@@ -72,7 +66,6 @@ class GitHubRepoCollector:
                     print(f"Error fetching data: {response.status_code}")
                     break
                     
-                # Rate limiting
                 time.sleep(random.uniform(1, 3))
                 
             except Exception as e:
@@ -129,7 +122,6 @@ class GitHubRepoCollector:
     def get_repository_details(self, owner, repo_name):
         """Get detailed repository information"""
         try:
-            # Get repository details
             repo_url = f"{REPOS_ENDPOINT}/{owner}/{repo_name}"
             repo_response = self.session.get(repo_url)
             
@@ -138,7 +130,6 @@ class GitHubRepoCollector:
                 
             repo_data = repo_response.json()
             
-            # Get commit activity (last year)
             commits_url = f"{repo_url}/stats/commit_activity"
             commits_response = self.session.get(commits_url)
             
@@ -148,7 +139,6 @@ class GitHubRepoCollector:
                 if commit_data:
                     commit_activity = sum(week.get('total', 0) for week in commit_data)
             
-            # Get contributors count
             contributors_url = f"{repo_url}/contributors"
             contributors_response = self.session.get(contributors_url)
             
@@ -174,7 +164,6 @@ class GitHubRepoCollector:
     
     def extract_repo_data(self, repo, technology, search_type='language'):
         """Extract and structure repository data"""
-        # Basic repository information
         repo_data = {
             'id': repo.get('id'),
             'name': repo.get('name'),
@@ -197,17 +186,14 @@ def calculate_activity_score(repo_data):
     watchers = repo_data.get('watchers_count', 0)
     issues = repo_data.get('open_issues_count', 0)
     
-    # Days since creation (using created_at since updated_at is not extracted)
     try:
         created_at = datetime.fromisoformat(repo_data.get('created_at', '').replace('Z', '+00:00'))
         days_since_creation = (datetime.now() - created_at.replace(tzinfo=None)).days
     except:
         days_since_creation = 365
     
-    # Composite score calculation
     popularity_score = (stars * 1.0) + (forks * 2.0) + (watchers * 0.5)
     
-    # Age penalty - older repos without recent activity get penalized
     age_penalty = max(0, days_since_creation - 365) * 0.05
     
     activity_score = max(0, popularity_score - age_penalty)
@@ -230,20 +216,16 @@ def collect_github_data(technologies=None, max_repos_per_tech=500):
     for tech in technologies:
         print(f"\n=== Collecting data for {tech} ===")
         
-        # Search by language first
         repos_by_lang = collector.search_repositories_by_language(
             tech, max_pages=1
         )
         
-        # Search by topic
         repos_by_topic = collector.search_repositories_by_topic(
             tech, max_pages=1
         )
         
-        # Combine and deduplicate
         tech_repos = repos_by_lang + repos_by_topic
         
-        # Remove duplicates based on repository ID
         seen_ids = set()
         unique_repos = []
         for repo in tech_repos:
@@ -251,10 +233,8 @@ def collect_github_data(technologies=None, max_repos_per_tech=500):
                 seen_ids.add(repo['id'])
                 unique_repos.append(repo)
         
-        # Limit to max_repos_per_tech
         unique_repos = unique_repos[:max_repos_per_tech]
         
-        # Calculate activity scores
         for repo in unique_repos:
             activity_data = calculate_activity_score(repo)
             repo.update(activity_data)
@@ -262,7 +242,6 @@ def collect_github_data(technologies=None, max_repos_per_tech=500):
         all_repos.extend(unique_repos)
         print(f"Collected {len(unique_repos)} repositories for {tech}")
         
-        # Rate limiting between technologies
         time.sleep(random.uniform(5, 15))
     
     return all_repos
@@ -273,10 +252,8 @@ def save_to_parquet(repos_data: List[Dict[str, Any]], output_path: str):
         print("No data to save")
         return
     
-    # Convert to pandas DataFrame
     df = pd.DataFrame(repos_data)
     
-    # Data type optimization for parquet storage
     df['id'] = df['id'].astype('Int64')
     df['stars_count'] = df['stars_count'].astype('Int64')
     df['forks_count'] = df['forks_count'].astype('Int64')
@@ -286,21 +263,17 @@ def save_to_parquet(repos_data: List[Dict[str, Any]], output_path: str):
     df['popularity_score'] = df['popularity_score'].astype('float64')
     df['activity_score'] = df['activity_score'].astype('float64')
     
-    # Convert created_at to datetime and add partitioning columns
     df['created_at'] = pd.to_datetime(df['created_at'])
     df['year'] = df['created_at'].dt.year
     df['month'] = df['created_at'].dt.month
     df['day'] = df['created_at'].dt.day
     
-    # Create output directory if it doesn't exist
     os.makedirs(output_path, exist_ok=True)
     
-    # Generate filename with timestamp to avoid conflicts
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     filename = f"github_repos_{timestamp}.parquet"
     full_path = os.path.join(output_path, filename)
     
-    # Save to parquet with compression
     df.to_parquet(
         full_path,
         engine='pyarrow',
@@ -315,20 +288,17 @@ def main():
     """Main execution function"""
     print("Starting GitHub repositories data collection...")
     
-    # Collect data
     repos_data = collect_github_data(
         technologies=TECHNOLOGIES,
         max_repos_per_tech=5
     )
     
-    # Save to parquet in bronze layer
     output_path = "../../data/bronze/github_repos"
     save_to_parquet(repos_data, output_path)
     
     print(f"\nData collection completed! Collected {len(repos_data)} repositories.")
     print(f"Data saved to {output_path}")
     
-    # Print summary statistics
     if repos_data:
         technologies_count = {}
         for repo in repos_data:

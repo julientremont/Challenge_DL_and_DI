@@ -2,21 +2,16 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Load environment variables
 load_dotenv()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-change-this-in-production')
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DJANGO_DEBUG', 'True').lower() == 'true'
 
 ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
-# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -25,13 +20,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt',
     'corsheaders',
     'drf_spectacular',
     'src.api.trends',
     'src.api.stackoverflow_survey',
     'src.api.adzuna_jobs',
-    'src.api.glassdoor_jobs',
     'src.api.github_jobs',
+    'src.api.eurotechjobs',
 ]
 
 MIDDLEWARE = [
@@ -69,8 +65,8 @@ WSGI_APPLICATION = 'src.api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('MYSQL_DATABASE', 'ml_models_db'),
-        'USER': os.getenv('MYSQL_USER', 'tatane1'),
+        'NAME': os.getenv('MYSQL_DATABASE', 'silver'),
+        'USER': os.getenv('MYSQL_USER', 'tatane'),
         'PASSWORD': os.getenv('MYSQL_PASSWORD', 'tatane'),
         'HOST': os.getenv('MYSQL_HOST', 'localhost'),
         'PORT': os.getenv('MYSQL_PORT', '3306'),
@@ -112,6 +108,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Django REST Framework
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',     # Réactivé pour login endpoint
+        'rest_framework.authentication.BasicAuthentication',       # Réactivé pour login endpoint
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'src.api.permissions.IsAdminOrReadOnlyForUsers',
+    ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 100,
     'DEFAULT_FILTER_BACKENDS': [
@@ -125,10 +129,9 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
-# Swagger/OpenAPI Settings
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Challenge DL & DI API',
-    'DESCRIPTION': 'API for multi-source data analysis: Google Trends, StackOverflow Survey, Adzuna Jobs, and Glassdoor Jobs',
+    'DESCRIPTION': "Swagger pour l'API du projet Challenge DL & DI API",
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
     'COMPONENT_SPLIT_REQUEST': True,
@@ -140,6 +143,11 @@ SPECTACULAR_SETTINGS = {
         'filter': True,
         'tagsSorter': 'alpha',
     },
+    'AUTHENTICATION_WHITELIST': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
     'TAGS': [
         {
             'name': 'Google Trends',
@@ -152,10 +160,6 @@ SPECTACULAR_SETTINGS = {
         {
             'name': 'Adzuna Jobs',
             'description': 'Job market data from Adzuna - Job listings, salary trends, and market analysis'
-        },
-        {
-            'name': 'Glassdoor Jobs',
-            'description': 'Company and job data from Glassdoor - Job postings, company ratings, and industry insights'
         },
         {
             'name': 'API Info',
@@ -173,3 +177,25 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_CREDENTIALS = True
+
+# JWT Settings
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': True,
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': None,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+}
