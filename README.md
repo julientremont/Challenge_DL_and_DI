@@ -1,6 +1,6 @@
 # Challenge_DL_and_DI
 -- Création de la table search_frequency
-CREATE TABLE silver.Trends_FR (
+CREATE TABLE silver.Trends (
     id INT AUTO_INCREMENT PRIMARY KEY,
     country_code VARCHAR(2) NOT NULL,
     date DATE NOT NULL,

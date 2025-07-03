@@ -21,6 +21,9 @@ keywords_techs = [
     'react', 'angular', 'django',
 ]
 
+country_codes = ["FR","AT", "BE" "CH", "DE", "ES", "GB", "IT", "NL", "PL",]
+
+
 jdbc_url = "jdbc:mysql://localhost:3306/silver"
 properties = {
     "user": os.getenv("MYSQL_USER"),
@@ -73,11 +76,13 @@ def post_dataframe_mysql(spark, df, table_name):
     
 dataframes = []
 spark = create_spark_session()
-for keyword in keywords_techs:
-    output_path = f"./data/bronze/gtrends/FR/{keyword}"
-    df = get_bronze_parquet(spark,output_path)
-    dataframes.append(df)
-    merged_df = reduce(merge_multiple_dataframes_reduce, dataframes)
+for key in country_codes:
+    for keyword in keywords_techs:
+        output_path = f"./data/bronze/gtrends/FR/{keyword}"
+        df = get_bronze_parquet(spark,output_path)
+        dataframes.append(df)
+        add_df = dataframes.withColumn('Country', lit(key))
+        merged_df = reduce(merge_multiple_dataframes_reduce, dataframes)
 
 drop_df = merged_df.drop('isPartial', 'annee_insert', 'mois_insert', 'jour_insert') \
             .dropDuplicates()
@@ -86,7 +91,7 @@ rename_df = drop_df.withColumnRenamed('date', 'Date') \
                      .withColumnRenamed('country', 'Country code')\
                      .withColumnRenamed('keyword', 'Keyword')
 
-add_df = rename_df.withColumn('Country', lit('French'))
-final_df = supprimer_lignes_vides(add_df)
+dropnull_df = rename_df.dropna(subset=["Search frequency"])
+final_df = supprimer_lignes_vides(dropnull_df)
 post_dataframe_mysql(spark, final_df, 'Trends_FR')
 

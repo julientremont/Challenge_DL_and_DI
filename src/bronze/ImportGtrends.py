@@ -17,8 +17,8 @@ keywords_techs = [
     
     # Frameworks et bibliothèques web
     'react', 'angular', 'vue.js', 'django',]
-country_codes = ["AT", "BE", "CH", "DE", "ES", "GB", "IT", "NL", "PL"]
-
+country_codes = [ "CH", "DE", "ES", "GB", "IT", "NL", "PL",]
+""""FR","AT", "BE","""
 
 def get_trends_histo(keywords_techs, country_codes, start_date, end_date):
     pytrend = TrendReq(hl='fr', tz=360)
@@ -64,7 +64,7 @@ def get_trends_histo(keywords_techs, country_codes, start_date, end_date):
                                 "isPartial": row['isPartial']
                             }
                             # Sauvegarder en parquet
-                            output_paths = f"../../data/bronze/gtrends/{country_code}/{keywords_tech}"
+                            output_paths = f"./data/bronze/gtrends/{country_code}/{keywords_tech}"
                             json_to_parquet(data_point, output_paths)
                             
                         pause2 = random.uniform(1, 1)
@@ -85,59 +85,6 @@ def get_trends_histo(keywords_techs, country_codes, start_date, end_date):
         else:
             current_date = current_date.replace(month=current_date.month + 1)
 
-
-def get_trends_day(keywords_techs, country_codes, date=None):
-    pytrend = TrendReq(hl='fr', tz=360)
-    
-    # Si aucune date n'est fournie, prendre la veille
-    if date is None:
-        current_date = datetime.now() - timedelta(days=1)
-    else:
-        # Convertir la date string en objet datetime si nécessaire
-        if isinstance(date, str):
-            current_date = datetime.strptime(date, '%Y-%m-%d')
-        else:
-            current_date = date
-    
-    print(f"Récupération des données pour le {current_date.strftime('%Y-%m-%d')}")
-    
-    for keywords_tech in keywords_techs:
-        for country_code in country_codes:
-            try:
-                print(f"Recherche {keywords_tech}, {country_code} pour la date {current_date.strftime('%Y-%m-%d')}")
-                
-                # Format de timeframe pour un jour spécifique
-                timeframe = current_date.strftime('%Y-%m-%d')
-                
-                pytrend.build_payload([keywords_tech], cat=0, timeframe=timeframe, geo=country_code, gprop='')
-                result = pytrend.interest_over_time()
-                
-                if not result.empty:
-                    print("Succès !")
-                    for date_index, row in result.iterrows():
-                        data_point = {
-                            "keyword": keywords_tech,
-                            "country": country_code,
-                            "date": date_index.strftime('%Y-%m-%d'),
-                            "search_frequency": int(row[keywords_tech]),
-                            "isPartial": row['isPartial']
-                        }
-                        # Sauvegarder en parquet
-                        output_paths = f"./datas/bronze/gtrends/{country_code}/{keywords_tech}"
-                        json_to_parquet(data_point, output_paths)
-                        
-                    pause2 = random.uniform(2, 5)  # Pause plus réaliste
-                    print(f"Temps de pause {pause2:.2f} secondes")
-                    time.sleep(pause2)
-                else:
-                    print("Aucune donnée")
-                    
-            except Exception as e:
-                print(f"Erreur pour {keywords_tech} en {country_code}: {e}")
-                pause2 = random.uniform(30, 60)  # Pause plus longue en cas d'erreur
-                print(f"Temps de pause {pause2:.2f} secondes")
-                time.sleep(pause2)
-
 def json_to_parquet(json_data, output_path):
     spark = spark_manager.get_session()
     df = spark.createDataFrame([json_data])
@@ -151,6 +98,8 @@ def json_to_parquet(json_data, output_path):
 
 
 # importer les trends sur une plage donné.
-resulta = get_trends_histo(keywords_techs, country_codes, start_date='2025-06-31', end_date='2025-07-02')
- #resulta = get_trends_day(keywords_techs, country_codes, date=None)
+resulta = get_trends_histo(keywords_techs, country_codes, start_date='2025-06-07', end_date='2025-07-03')
+#yesterday = datetime.now() - timedelta(days=1)
+#date_yesterday = yesterday.strftime('%Y-%m-%d')
+#resulta = get_trends_histo(keywords_techs, country_codes, start_date=date_yesterday, end_date=date_yesterday)
 print("Traitement terminé avec succès !")
