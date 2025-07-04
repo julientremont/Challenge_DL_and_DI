@@ -111,14 +111,19 @@ class StackOverflowSurveySilverProcessor:
     def _process_salary_data(self, df: pd.DataFrame) -> pd.DataFrame:
         """Process and validate salary data"""
         if 'salary_usd' not in df.columns:
-            df['salary_usd_cleaned'] = None
+            df['salary_usd_cleaned'] = 0
             df['salary_range'] = 'unknown'
             return df
+
+        df['salary_usd'] = df['salary_usd'].fillna(0)
         
         df['salary_usd_cleaned'] = pd.to_numeric(df['salary_usd'], errors='coerce')
         
         df.loc[(df['salary_usd_cleaned'] < 1000) | (df['salary_usd_cleaned'] > 1000000), 'salary_usd_cleaned'] = None
-        
+
+        mean_salary = df['salary_usd_cleaned'].mean()
+        df['salary_usd_cleaned'] = df['salary_usd_cleaned'].fillna(mean_salary)
+
         df['salary_range'] = 'unknown'
         df.loc[df['salary_usd_cleaned'] < 50000, 'salary_range'] = 'under_50k'
         df.loc[(df['salary_usd_cleaned'] >= 50000) & (df['salary_usd_cleaned'] < 80000), 'salary_range'] = '50k_80k'
@@ -263,8 +268,6 @@ class StackOverflowSurveySilverProcessor:
         
         self.create_mysql_table()
         self.save_to_mysql(silver_df)
-        
-        self._print_summary(silver_df)
         
         logger.info("StackOverflow survey silver layer processing completed!")
     
