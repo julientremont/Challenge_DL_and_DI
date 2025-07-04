@@ -1,10 +1,7 @@
 from pyspark.sql import SparkSession
 import requests
-import sys
-import os 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 from src.utils.sparkmanager import spark_manager
-
+from src.utils.paths import get_bronze_path
 
 
 def get_api():
@@ -29,7 +26,8 @@ def get_api():
     with spark_manager as sm:
         spark = sm.get_session()
         df = spark.createDataFrame(tot_response)
-        spark_manager.write_parquet(df, "data/bronze/jobicy/", mode="overwrite")
+        output_path = str(get_bronze_path('jobicy_jobs'))
+        spark_manager.write_parquet(df, output_path, mode="overwrite")
 
 
 if __name__ == "__main__":

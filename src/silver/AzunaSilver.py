@@ -11,6 +11,7 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 from src.utils.sparkmanager import spark_manager
 from src.utils.sqlmanager import sql_manager
+from src.utils.paths import get_bronze_path, get_silver_path
 
 # Charger les variables d'environnement
 load_dotenv()
@@ -81,7 +82,8 @@ def post_dataframe_mysql(spark, df, table_name):
 dataframes = []
 spark = spark_manager.create_session()
 for key in pays_europeens.keys():
-    output_path = f"./data/bronze/azuna/Salary/{key}"
+    base_path = get_bronze_path('adzuna_jobs')
+    output_path = str(base_path / "Salary" / key)
     df = get_bronze_parquet(spark,output_path)
     dataframes.append(df)
     merged_df = reduce(merge_multiple_dataframes_reduce, dataframes)
@@ -101,7 +103,8 @@ post_dataframe_mysql(spark, final_df, 'adzuna_jobs_silver')
 dataframes2 = []
 spark = spark_manager.create_session()
 for key in pays_europeens.keys():
-    output_path = f"./data/bronze/azuna/Dispertion/{key}"
+    base_path = get_bronze_path('adzuna_jobs')
+    output_path = str(base_path / "Dispertion" / key)
     df = get_bronze_parquet(spark,output_path)
     dataframes2.append(df)
     merged_df = reduce(merge_multiple_dataframes_reduce, dataframes2)

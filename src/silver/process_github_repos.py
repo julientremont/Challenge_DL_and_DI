@@ -5,18 +5,20 @@ import logging
 
 from src.utils.sqlmanager import sql_manager
 from src.utils.mysql_schemas import create_table
+from src.utils.paths import get_bronze_path, get_silver_path, list_parquet_files
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 class GitHubReposSilverProcessor:
-    def __init__(self, bronze_path: str = "../../data/bronze/github_repos"):
-        self.bronze_path = bronze_path
+    def __init__(self):
+        self.bronze_path = get_bronze_path('github_repos')
+        self.silver_path = get_silver_path('github_repos')
         self.table_name = "github_repos_silver"
         
     def load_bronze_data(self) -> pd.DataFrame:
         """Load all parquet files from bronze layer"""
-        parquet_files = glob.glob(os.path.join(self.bronze_path, "*.parquet"))
+        parquet_files = list_parquet_files(self.bronze_path)
         
         if not parquet_files:
             logger.warning(f"No parquet files found in {self.bronze_path}")
@@ -29,7 +31,7 @@ class GitHubReposSilverProcessor:
             try:
                 df = pd.read_parquet(file)
                 dfs.append(df)
-                logger.info(f"Loaded {len(df)} records from {os.path.basename(file)}")
+                logger.info(f"Loaded {len(df)} records from {file.name}")
             except Exception as e:
                 logger.error(f"Error loading {file}: {e}")
                 
@@ -54,11 +56,11 @@ class GitHubReposSilverProcessor:
         
         df.loc[:, 'name_cleaned'] = df['name'].str.strip().str.lower()
         df.loc[:, 'name_cleaned'] = df['name_cleaned'].str.replace(r'[^\w\-\.]', '', regex=True)
-        df = df.drop(columns=['name'], errors='ignore')
-        
+        df.loc[:, 'name_cleaned'] = df['name_cleaned'].fillna('unknown')
+        df.loc[:, 'name'] = df['name_cleaned']
+
         df.loc[:, 'technology_normalized'] = df['technology'].str.strip().str.lower()
         
-        df.loc[:, 'name'] = df['name'].fillna('unknown')
         df.loc[:, 'technology_normalized'] = df['technology_normalized'].fillna('unknown')
         df.loc[:, 'search_type'] = df['search_type'].fillna('unknown')
         

@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 import re
 from urllib.parse import urljoin
 import logging
+from src.utils.paths import get_bronze_path, get_timestamped_filename
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -243,7 +244,7 @@ class EuroTechJobsScraper:
         logger.info(f"Total unique jobs scraped: {len(unique_jobs)}")
         return unique_jobs
 
-def save_to_parquet(jobs_data: List[Dict[str, Any]], output_path: str):
+def save_to_parquet(jobs_data: List[Dict[str, Any]]):
     """Save jobs data to parquet format using pandas"""
     if not jobs_data:
         logger.warning("No data to save")
@@ -259,11 +260,12 @@ def save_to_parquet(jobs_data: List[Dict[str, Any]], output_path: str):
     df['month'] = pd.to_datetime(df['scraped_at']).dt.month
     df['day'] = pd.to_datetime(df['scraped_at']).dt.day
     
-    os.makedirs(output_path, exist_ok=True)
+    # Use unified path management
+    output_path = get_bronze_path('eurotechjobs')
+    output_path.mkdir(parents=True, exist_ok=True)
     
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    filename = f"eurotechjobs_{timestamp}.parquet"
-    full_path = os.path.join(output_path, filename)
+    filename = get_timestamped_filename("eurotechjobs")
+    full_path = output_path / filename
     
     df.to_parquet(
         full_path,
@@ -283,11 +285,10 @@ def main():
     
     jobs_data = scraper.scrape_all_jobs()
     
-    output_path = "./data/bronze/eurotechjobs"
-    save_to_parquet(jobs_data, output_path)
+    save_to_parquet(jobs_data)
     
     logger.info(f"Data collection completed! Collected {len(jobs_data)} jobs.")
-    logger.info(f"Data saved to {output_path}")
+    logger.info(f"Data saved to bronze layer")
     
     if jobs_data:
         companies = set(job['company'] for job in jobs_data if job['company'])

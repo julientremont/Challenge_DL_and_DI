@@ -5,18 +5,20 @@ import logging
 
 from src.utils.sqlmanager import sql_manager
 from src.utils.mysql_schemas import create_table
+from src.utils.paths import get_bronze_path, get_silver_path, list_parquet_files
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 class StackOverflowSurveySilverProcessor:
-    def __init__(self, bronze_path: str = "../../data/bronze/stackoverflow_survey"):
-        self.bronze_path = bronze_path
+    def __init__(self):
+        self.bronze_path = get_bronze_path('stackoverflow_survey')
+        self.silver_path = get_silver_path('stackoverflow_survey')
         self.table_name = "stackoverflow_survey_silver"
         
     def load_bronze_data(self) -> pd.DataFrame:
         """Load all parquet files from bronze layer"""
-        parquet_files = glob.glob(os.path.join(self.bronze_path, "*.parquet"))
+        parquet_files = list_parquet_files(self.bronze_path)
         
         if not parquet_files:
             logger.warning(f"No parquet files found in {self.bronze_path}")

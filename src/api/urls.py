@@ -30,6 +30,7 @@ def api_root(request):
             'adzuna_jobs': '/api/adzuna-jobs/',
             'github_repos': '/api/github-repos/',
             'eurotechjobs': '/api/eurotechjobs/',
+            'jobicy_jobs': '/api/jobicy-jobs/',
         },
         'data_sources': {
             'google_trends': {
@@ -51,6 +52,10 @@ def api_root(request):
             'eurotechjobs': {
                 'base_url': '/api/eurotechjobs/',
                 'endpoints': ['/', '/summary/', '/country-stats/', '/technology-stats/', '/job-type-analysis/', '/time-series/', '/company-analysis/']
+            },
+            'jobicy_jobs': {
+                'base_url': '/api/jobicy-jobs/',
+                'endpoints': ['/', '/summary/', '/by-country/', '/job-analysis/', '/company-analysis/', '/salary-analysis/', '/time-series/']
             },
             'analysis': {
                 'base_url': '/api/analysis/',
@@ -78,6 +83,7 @@ urlpatterns = [
     path('api/adzuna-jobs/', include('src.api.adzuna_jobs.urls')),
     path('api/github-repos/', include('src.api.github_jobs.urls')),
     path('api/eurotechjobs/', include('src.api.eurotechjobs.urls')),
+    path('api/jobicy-jobs/', include('src.api.jobicy_jobs.urls')),
     path('api/analysis/', include('src.api.analysis.urls')),
     
     # Swagger/OpenAPI URLs

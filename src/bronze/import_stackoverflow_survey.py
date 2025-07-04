@@ -6,6 +6,7 @@ import time
 import logging
 from datetime import datetime
 from typing import List, Dict, Any, Optional
+from src.utils.paths import get_bronze_path
 
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -14,8 +15,8 @@ logger = logging.getLogger(__name__)
 class StackOverflowSurveyCollector:
     """Collector for StackOverflow Developer Survey data from their official site"""
     
-    def __init__(self, output_dir: str = "./data/bronze/stackoverflow_survey"):
-        self.output_dir = output_dir
+    def __init__(self, output_dir: str = None):
+        self.output_dir = output_dir or str(get_bronze_path('stackoverflow_survey'))
         self.base_url = "https://survey.stackoverflow.co/datasets/"
         self.session = requests.Session()
         self.session.headers.update({

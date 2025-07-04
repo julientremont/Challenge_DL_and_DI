@@ -11,6 +11,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 from src.utils.sparkmanager import spark_manager
 from src.utils.sqlmanager import sql_manager
 from src.utils.mysql_schemas import create_table, save_spark_df_to_mysql
+from src.utils.paths import get_bronze_path, get_silver_path
 
 # Charger les variables d'environnement
 load_dotenv()
@@ -91,7 +92,8 @@ class GTrendsSilverProcessor:
             # Process each country and keyword combination
             for country_code in self.country_codes:
                 for keyword in self.keywords_techs:
-                    output_path = f"./data/bronze/gtrends/{country_code}/{keyword}"
+                    base_path = get_bronze_path('google_trends')
+                    output_path = str(base_path / country_code / keyword)
                     try:
                         df = self.get_bronze_parquet(spark, output_path)
                         # Add country information to the dataframe

@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'src.api.adzuna_jobs',
     'src.api.github_jobs',
     'src.api.eurotechjobs',
+    'src.api.jobicy_jobs',
     'src.api.analysis',
 ]
 

@@ -787,6 +787,241 @@
 			]
 		},
 		{
+			"name": "🌐 Jobicy Jobs",
+			"item": [
+				{
+					"name": "List Jobicy Jobs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/jobicy-jobs/?country_code=fr&job_level=Senior&has_salary=true",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"jobicy-jobs",
+								""
+							],
+							"query": [
+								{
+									"key": "country_code",
+									"value": "fr"
+								},
+								{
+									"key": "job_level",
+									"value": "Senior"
+								},
+								{
+									"key": "has_salary",
+									"value": "true"
+								}
+							]
+						},
+						"description": "Get Jobicy job listings with comprehensive filtering"
+					},
+					"response": []
+				},
+				{
+					"name": "Jobicy Job Detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/jobicy-jobs/1/",
+						"description": "Get detailed job information with full metadata"
+					},
+					"response": []
+				},
+				{
+					"name": "Jobicy Summary",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/jobicy-jobs/summary/?country_code=de&job_level=Senior",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"jobicy-jobs",
+								"summary",
+								""
+							],
+							"query": [
+								{
+									"key": "country_code",
+									"value": "de"
+								},
+								{
+									"key": "job_level",
+									"value": "Senior"
+								}
+							]
+						},
+						"description": "Get comprehensive job market summary with distributions"
+					},
+					"response": []
+				},
+				{
+					"name": "Jobicy Jobs by Country",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/jobicy-jobs/by-country/?job_level=Senior&limit=15",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"jobicy-jobs",
+								"by-country",
+								""
+							],
+							"query": [
+								{
+									"key": "job_level",
+									"value": "Senior"
+								},
+								{
+									"key": "limit",
+									"value": "15"
+								}
+							]
+						},
+						"description": "Get job market statistics grouped by country"
+					},
+					"response": []
+				},
+				{
+					"name": "Jobicy Job Analysis",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/jobicy-jobs/job-analysis/?country_code=gb&limit=20",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"jobicy-jobs",
+								"job-analysis",
+								""
+							],
+							"query": [
+								{
+									"key": "country_code",
+									"value": "gb"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						},
+						"description": "Get detailed analysis of job titles and opportunities"
+					},
+					"response": []
+				},
+				{
+					"name": "Jobicy Company Analysis",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/jobicy-jobs/company-analysis/?country_code=nl&limit=15",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"jobicy-jobs",
+								"company-analysis",
+								""
+							],
+							"query": [
+								{
+									"key": "country_code",
+									"value": "nl"
+								},
+								{
+									"key": "limit",
+									"value": "15"
+								}
+							]
+						},
+						"description": "Get detailed analysis of companies and hiring patterns"
+					},
+					"response": []
+				},
+				{
+					"name": "Jobicy Salary Analysis",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/jobicy-jobs/salary-analysis/?job_level=Senior&job_type=Full-time",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"jobicy-jobs",
+								"salary-analysis",
+								""
+							],
+							"query": [
+								{
+									"key": "job_level",
+									"value": "Senior"
+								},
+								{
+									"key": "job_type",
+									"value": "Full-time"
+								}
+							]
+						},
+						"description": "Get comprehensive salary analysis with distributions"
+					},
+					"response": []
+				},
+				{
+					"name": "Jobicy Time Series",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/jobicy-jobs/time-series/?country_code=es&group_by=month",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"jobicy-jobs",
+								"time-series",
+								""
+							],
+							"query": [
+								{
+									"key": "country_code",
+									"value": "es"
+								},
+								{
+									"key": "group_by",
+									"value": "month"
+								}
+							]
+						},
+						"description": "Get time series data for job market evolution"
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "🔶 Analysis (Gold Layer)",
 			"item": [
 				{

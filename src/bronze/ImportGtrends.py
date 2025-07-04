@@ -5,6 +5,7 @@ import sys
 from calendar import monthrange
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 from src.utils.sparkmanager import spark_manager
+from src.utils.paths import get_bronze_path
 from datetime import datetime, timedelta 
 import time
 import random
@@ -63,7 +64,8 @@ def get_trends_histo(keywords_techs, country_codes, start_date, end_date):
                                 "isPartial": row['isPartial']
                             }
                             # Sauvegarder en parquet
-                            output_paths = f"./data/bronze/gtrends/{country_code}/{keywords_tech}"
+                            base_path = get_bronze_path('google_trends')
+                            output_paths = str(base_path / country_code / keywords_tech)
                             json_to_parquet(data_point, output_paths)
                             
                         pause2 = random.uniform(1, 1)

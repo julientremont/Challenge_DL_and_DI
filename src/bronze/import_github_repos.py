@@ -6,6 +6,11 @@ import os
 from datetime import datetime
 from typing import List, Dict, Any
 
+# Import unified path management
+import sys
+sys.path.append(str(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
+from src.utils.paths import get_bronze_path, get_timestamped_filename
+
 TECHNOLOGIES = [
     'python', 'javascript', 'java', 'typescript', 'c++', 'c#', 'php', 'ruby', 'go', 'rust', 'kotlin',
     'swift', 'scala', 'dart', 'elixir', 'haskell', 'clojure', 'lua', 'perl', 'r', 'matlab',
@@ -246,7 +251,7 @@ def collect_github_data(technologies=None, max_repos_per_tech=500):
     
     return all_repos
 
-def save_to_parquet(repos_data: List[Dict[str, Any]], output_path: str):
+def save_to_parquet(repos_data: List[Dict[str, Any]]):
     """Save repository data to parquet format using pandas"""
     if not repos_data:
         print("No data to save")
@@ -268,11 +273,12 @@ def save_to_parquet(repos_data: List[Dict[str, Any]], output_path: str):
     df['month'] = df['created_at'].dt.month
     df['day'] = df['created_at'].dt.day
     
-    os.makedirs(output_path, exist_ok=True)
+    # Use unified path management
+    output_path = get_bronze_path('github_repos')
+    output_path.mkdir(parents=True, exist_ok=True)
     
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    filename = f"github_repos_{timestamp}.parquet"
-    full_path = os.path.join(output_path, filename)
+    filename = get_timestamped_filename("github_repos")
+    full_path = output_path / filename
     
     df.to_parquet(
         full_path,
@@ -293,11 +299,10 @@ def main():
         max_repos_per_tech=5
     )
     
-    output_path = "./data/bronze/github_repos"
-    save_to_parquet(repos_data, output_path)
+    save_to_parquet(repos_data)
     
     print(f"\nData collection completed! Collected {len(repos_data)} repositories.")
-    print(f"Data saved to {output_path}")
+    print(f"Data saved to bronze layer")
     
     if repos_data:
         technologies_count = {}

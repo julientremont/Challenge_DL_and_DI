@@ -7,6 +7,7 @@ import json
 import time
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 from src.utils.sparkmanager import spark_manager
+from src.utils.paths import get_bronze_path
 
 
 pays_europeens = {
@@ -149,7 +150,8 @@ def main():
             }
             data_final.append(data_point)  # Ajouter à la liste
         
-        output_path = f"./data/bronze/azuna/Salary/{key}"
+        base_path = get_bronze_path('adzuna_jobs')
+        output_path = str(base_path / "Salary" / key)
         json_to_parquet(data_final, output_path)
 
     print("Récupération des données histograme d'Azuna...")
@@ -167,7 +169,8 @@ def main():
                     "date": current_date 
                 }
                 data_final.append(data_point)  # Ajouter à la liste
-            output_path = f"./data/bronze/azuna/Dispertion/{key}"
+            base_path = get_bronze_path('adzuna_jobs')
+            output_path = str(base_path / "Dispertion" / key)
             json_to_parquet(data_final, output_path)
 if __name__ == "__main__":
     main()
