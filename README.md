@@ -110,6 +110,9 @@ python src/bronze/importAdzuna.py
 
 # Collecte Google Trends
 python src/bronze/importGtrends.py
+
+# Collecte Jobicy
+python src/bronze/import_jobicy.py
 ```
 
 ### 2. Traitement et nettoyage (Silver)
@@ -120,6 +123,7 @@ python src/silver/github_repos_silver.py
 python src/silver/stackoverflow_survey_silver.py
 python src/silver/adzuna_silver.py
 python src/silver/trends_silver.py
+python src/silver/JobicySilver.py
 ```
 
 ### 3. Création de l'entrepôt (Gold)
