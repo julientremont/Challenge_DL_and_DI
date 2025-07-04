@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 class StackOverflowSurveyCollector:
     """Collector for StackOverflow Developer Survey data from their official site"""
     
-    def __init__(self, output_dir: str = "../../data/bronze/stackoverflow_survey"):
+    def __init__(self, output_dir: str = "./data/bronze/stackoverflow_survey"):
         self.output_dir = output_dir
         self.base_url = "https://survey.stackoverflow.co/datasets/"
         self.session = requests.Session()

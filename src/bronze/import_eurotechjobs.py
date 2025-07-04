@@ -283,7 +283,7 @@ def main():
     
     jobs_data = scraper.scrape_all_jobs()
     
-    output_path = "../../data/bronze/eurotechjobs"
+    output_path = "./data/bronze/eurotechjobs"
     save_to_parquet(jobs_data, output_path)
     
     logger.info(f"Data collection completed! Collected {len(jobs_data)} jobs.")

@@ -293,7 +293,7 @@ def main():
         max_repos_per_tech=5
     )
     
-    output_path = "../../data/bronze/github_repos"
+    output_path = "./data/bronze/github_repos"
     save_to_parquet(repos_data, output_path)
     
     print(f"\nData collection completed! Collected {len(repos_data)} repositories.")

@@ -7,8 +7,8 @@ class Config:
         self.mysql_host = os.getenv('MYSQL_HOST', 'localhost')
         self.mysql_port = int(os.getenv('MYSQL_PORT', '3306'))
         self.mysql_database = os.getenv('MYSQL_DATABASE', 'silver')
-        self.mysql_user = os.getenv('MYSQL_USER', 'tatane')
-        self.mysql_password = os.getenv('MYSQL_PASSWORD', 'tatane')
+        self.mysql_user = os.getenv('MYSQL_USER', 'root')
+        self.mysql_password = os.getenv('MYSQL_PASSWORD', 'mp0117MIA!')
         
         self.spark_driver_memory = os.getenv('SPARK_DRIVER_MEMORY', '2g')
         self.spark_executor_memory = os.getenv('SPARK_EXECUTOR_MEMORY', '4g')

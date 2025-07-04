@@ -1,5 +1,8 @@
 from pyspark.sql import SparkSession
 import requests
+import sys
+import os 
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 from src.utils.sparkmanager import spark_manager
 
 

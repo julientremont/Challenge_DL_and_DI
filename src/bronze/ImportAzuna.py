@@ -149,7 +149,7 @@ def main():
             }
             data_final.append(data_point)  # Ajouter à la liste
         
-        output_path = f"../../data/bronze/azuna/Salary/{key}"
+        output_path = f"./data/bronze/azuna/Salary/{key}"
         json_to_parquet(data_final, output_path)
 
     print("Récupération des données histograme d'Azuna...")
@@ -167,7 +167,7 @@ def main():
                     "date": current_date 
                 }
                 data_final.append(data_point)  # Ajouter à la liste
-            output_path = f"../../data/bronze/azuna/Dispertion/{key}"
+            output_path = f"./data/bronze/azuna/Dispertion/{key}"
             json_to_parquet(data_final, output_path)
 if __name__ == "__main__":
     main()
