@@ -37,16 +37,13 @@ class SQLManager:
             'password': self.config.mysql_password,
             'charset': 'utf8mb4',
             'autocommit': False,
-            # Enhanced connection settings for stability
-            'connection_timeout': 60,  # Connection timeout in seconds
+            'connection_timeout': 60,
             'use_unicode': True,
             'sql_mode': 'TRADITIONAL',
             'raise_on_warnings': False,
-            # Connection pool settings
             'pool_name': 'data_pipeline_pool',
             'pool_size': 10,
             'pool_reset_session': True,
-            # Keep-alive settings
             'autocommit': False,
             'time_zone': '+00:00'
         }
@@ -59,7 +56,6 @@ class SQLManager:
         
         while attempt <= max_retries:
             try:
-                # Try to get connection from pool first
                 if self.connection_pool:
                     try:
                         connection = self.connection_pool.get_connection()
@@ -68,17 +64,13 @@ class SQLManager:
                         self.logger.warning("Pool exhausted, creating direct connection")
                         connection = None
                 
-                # Fallback to direct connection
                 if connection is None:
                     connection_params = self.get_connection_params()
-                    # Remove pool-specific parameters for direct connection
-                    direct_params = {k: v for k, v in connection_params.items() 
+                    direct_params = {k: v for k, v in connection_params.items()
                                    if k not in ['pool_name', 'pool_size', 'pool_reset_session']}
                     connection = mysql.connector.connect(**direct_params)
                 
-                # Test connection
                 if connection and connection.is_connected():
-                    # Ping to ensure connection is alive
                     connection.ping(reconnect=True, attempts=3, delay=1)
                     self.logger.debug("Successfully connected to MySQL")
                     yield connection
@@ -91,7 +83,7 @@ class SQLManager:
                 if attempt <= max_retries:
                     self.logger.warning(f"MySQL connection attempt {attempt} failed: {e}. Retrying in {retry_delay}s...")
                     time.sleep(retry_delay)
-                    retry_delay *= 2  # Exponential backoff
+                    retry_delay *= 2
                 else:
                     self.logger.error(f"MySQL connection failed after {max_retries} attempts: {e}")
                     raise
@@ -140,7 +132,6 @@ class SQLManager:
         total_affected = 0
         
         try:
-            # Process data in batches to avoid memory issues and connection timeouts
             for i in range(0, len(data), batch_size):
                 batch = data[i:i + batch_size]
                 
@@ -231,21 +222,17 @@ class SQLManager:
             with self.get_connection() as connection:
                 cursor = connection.cursor(dictionary=True)
                 
-                # Basic connection test
                 cursor.execute("SELECT 1 as test")
                 health_status['connected'] = True
                 
-                # Get server version
                 cursor.execute("SELECT VERSION() as version")
                 result = cursor.fetchone()
                 health_status['server_version'] = result['version'] if result else 'Unknown'
                 
-                # Get current database
                 cursor.execute("SELECT DATABASE() as db")
                 result = cursor.fetchone()
                 health_status['current_database'] = result['db'] if result else 'None'
                 
-                # Check connection pool status
                 if self.connection_pool:
                     health_status['pool_available'] = True
                 
@@ -262,12 +249,10 @@ class SQLManager:
         try:
             if self.connection_pool:
                 # Note: mysql-connector-python doesn't have a direct reset method
-                # So we reinitialize the pool
                 self._initialize_pool()
                 self.logger.info("Connection pool reset successfully")
         except Exception as e:
             self.logger.error(f"Error resetting connection pool: {e}")
 
 
-# Global instance for easy usage
 sql_manager = SQLManager()

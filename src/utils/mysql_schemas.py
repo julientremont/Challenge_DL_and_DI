@@ -19,7 +19,8 @@ class MySQLSchemaManager:
             'stackoverflow_survey_silver': self._get_stackoverflow_survey_schema(),
             'trends_silver': self._get_trends_schema(),
             'adzuna_jobs_silver': self._get_adzuna_jobs_schema(),
-            'eurotechjobs_silver': self._get_eurotechjobs_schema()
+            'eurotechjobs_silver': self._get_eurotechjobs_schema(),
+            'jobicy_silver': self._get_jobicy_schema()
         }
     
     def _get_github_repos_schema(self) -> Dict:
@@ -173,6 +174,55 @@ class MySQLSchemaManager:
                 'INDEX idx_processed_at (processed_at DESC)',
                 'FULLTEXT INDEX ft_technologies (technologies)',
                 'UNIQUE KEY unique_job_url (url(767))'
+            ],
+            'engine': 'InnoDB',
+            'charset': 'utf8mb4',
+            'collate': 'utf8mb4_unicode_ci'
+        }
+    
+    def _get_jobicy_schema(self) -> Dict:
+        """Jobicy jobs silver layer schema"""
+        return {
+            'table_name': 'jobicy_silver',
+            'columns': [
+                'id INT AUTO_INCREMENT PRIMARY KEY',
+                'job_id VARCHAR(255) UNIQUE NOT NULL',
+                'job_title VARCHAR(500)',
+                'company_name VARCHAR(255)',
+                'company_logo VARCHAR(1000)',
+                'job_location VARCHAR(255)',
+                'country_code VARCHAR(5)',
+                'job_level VARCHAR(100)',
+                'job_level_standardized VARCHAR(50)',
+                'job_type VARCHAR(100)',
+                'job_type_standardized VARCHAR(50)',
+                'publication_date VARCHAR(100)',
+                'job_description TEXT',
+                'job_url VARCHAR(1000)',
+                'job_tags TEXT',
+                'job_industry VARCHAR(255)',
+                'salary_min DECIMAL(10,2)',
+                'salary_max DECIMAL(10,2)',
+                'salary_avg DECIMAL(10,2)',
+                'salary_currency VARCHAR(10)',
+                'has_salary_info BOOLEAN DEFAULT FALSE',
+                'tags_count INT DEFAULT 0',
+                'processed_date DATETIME NOT NULL',
+                'data_quality_score TINYINT DEFAULT 0'
+            ],
+            'indexes': [
+                'UNIQUE KEY unique_job_id (job_id)',
+                'INDEX idx_country_code (country_code)',
+                'INDEX idx_job_title (job_title(255))',
+                'INDEX idx_company (company_name)',
+                'INDEX idx_job_level (job_level_standardized)',
+                'INDEX idx_job_type (job_type_standardized)',
+                'INDEX idx_salary_range (salary_min, salary_max)',
+                'INDEX idx_has_salary (has_salary_info)',
+                'INDEX idx_processed_date (processed_date DESC)',
+                'INDEX idx_quality_score (data_quality_score DESC)',
+                'FULLTEXT INDEX ft_job_tags (job_tags)',
+                'FULLTEXT INDEX ft_job_description (job_description)'
             ],
             'engine': 'InnoDB',
             'charset': 'utf8mb4',

@@ -23,14 +23,11 @@ def get_api():
         response_json = response.json()["jobs"]
         tot_response.extend(response_json)
 
-
-    df = spark.createDataFrame(tot_response)
-
-    spark_manager.write_parquet(df, "data/bronze/jobicy/", mode="overwrite")
-
+    with spark_manager as sm:
+        spark = sm.get_session()
+        df = spark.createDataFrame(tot_response)
+        spark_manager.write_parquet(df, "data/bronze/jobicy/", mode="overwrite")
 
 
 if __name__ == "__main__":
-    spark = SparkSession.builder.appName("jobicy").getOrCreate()
-
     get_api()
