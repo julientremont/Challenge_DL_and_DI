@@ -25,6 +25,7 @@ Bronze Layer (Données brutes)
 ├── GitHub Repos (popularité des technologies)
 ├── StackOverflow Survey (préférences développeurs)
 ├── Adzuna Jobs (salaires et emplois)
+├── Jobicy (salaires et emplois)
 └── Google Trends (tendances de recherche)
 
 Silver Layer (Données nettoyées)
@@ -67,6 +68,10 @@ Gold Layer (Données analysables)
 - **Données** : Volume de recherche par pays et technologie
 - **Granularité** : Données quotidiennes
 
+### 6. Jobicy
+- **Objectif** : Données salariales
+- **Données** : 29 pays européens
+- **Granularité** : Données quotidiennes
 ## Installation et Configuration
 
 ### Prérequis
