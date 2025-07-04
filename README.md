@@ -1,5 +1,16 @@
 # Tech Market Data Pipeline
 
+## Participants
+
+Ethan TOMASO            ethan.tomaso@efrei.net
+Antoine VANDEPLANQUE    antoine.vandeplanque@efrei.net
+Elliot FESQUET          elliot.fesquet@efrei.net
+Julien TREMONT-RAIMI    julien.tremont-raimi@efrei.net
+
+## Lien du document
+
+lien : https://docs.google.com/document/d/1EOfA2tu8fYubmOR61WkQ9J_R52FHTkS33tC6r0z90lI/edit?usp=sharing
+
 ## Vue d'ensemble
 
 Pipeline de données complet pour analyser les tendances du marché technologique européen. Ce projet collecte, traite et unifie des données provenant de multiples sources pour fournir des insights sur les technologies populaires, les offres d'emploi et les tendances du marché.
