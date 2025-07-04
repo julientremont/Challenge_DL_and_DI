@@ -1,6 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
@@ -42,7 +41,6 @@ from drf_spectacular.openapi import OpenApiTypes, OpenApiExample
     },
     description='Login to the API using session authentication.\n\nTest credentials:\n- **Admin**: username=`admin`, password=`admin123`\n- **User**: username=`user`, password=`user123`'
 )
-@csrf_exempt
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def api_login(request):
@@ -170,7 +168,6 @@ def api_login(request):
         ),
     ]
 )
-@csrf_exempt
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def jwt_login(request):
@@ -266,7 +263,6 @@ def jwt_login(request):
         401: OpenApiResponse(description='Invalid refresh token'),
     }
 )
-@csrf_exempt
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def jwt_refresh(request):
@@ -311,6 +307,7 @@ def api_logout(request):
         return Response({
             'message': 'No active session to logout'
         })
+
 
 
 @extend_schema(

@@ -1,0 +1,1175 @@
+{
+	"info": {
+		"_postman_id": "797896c3-2c9a-4322-98f4-cfd51077be2a",
+		"name": "Challenge DL & DI API",
+		"description": "Complete API collection for Challenge DL & DI project with all data sources and analytics endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "37196844"
+	},
+	"item": [
+		{
+			"name": "🏠 API Root & Documentation",
+			"item": [
+				{
+					"name": "API Root",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/",
+						"description": "Get API root information and available endpoints"
+					},
+					"response": []
+				},
+				{
+					"name": "Swagger UI Documentation",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/docs/",
+						"description": "Interactive Swagger documentation"
+					},
+					"response": []
+				},
+				{
+					"name": "API Schema",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/schema/",
+						"description": "OpenAPI schema definition"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "📊 Google Trends",
+			"item": [
+				{
+					"name": "List Trends",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/trends/?limit=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"trends",
+								""
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						},
+						"description": "Get list of Google Trends data with pagination"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Trend Detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/trends/1/",
+						"description": "Get detailed information for a specific trend"
+					},
+					"response": []
+				},
+				{
+					"name": "Trends Summary",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/trends/summary/?keyword=python&date_from=2024-01-01",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"trends",
+								"summary",
+								""
+							],
+							"query": [
+								{
+									"key": "keyword",
+									"value": "python"
+								},
+								{
+									"key": "date_from",
+									"value": "2024-01-01"
+								}
+							]
+						},
+						"description": "Get summary statistics for Google Trends data"
+					},
+					"response": []
+				},
+				{
+					"name": "Top Keywords",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/trends/keywords_analysis/?limit=20&country_code=FR",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"trends",
+								"keywords_analysis",
+								""
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "20"
+								},
+								{
+									"key": "country_code",
+									"value": "FR"
+								}
+							]
+						},
+						"description": "Get most popular keywords by search volume"
+					},
+					"response": []
+				},
+				{
+					"name": "Time Series Analysis",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/trends/time-series/?keyword=javascript&group_by=month",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"trends",
+								"time-series",
+								""
+							],
+							"query": [
+								{
+									"key": "keyword",
+									"value": "javascript"
+								},
+								{
+									"key": "group_by",
+									"value": "month"
+								}
+							]
+						},
+						"description": "Get time series data for keyword trends"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🐙 GitHub Repositories",
+			"item": [
+				{
+					"name": "List Repositories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/github-repos/?technology=python&activity_level=high&limit=20",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"github-repos",
+								""
+							],
+							"query": [
+								{
+									"key": "technology",
+									"value": "python"
+								},
+								{
+									"key": "activity_level",
+									"value": "high"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						},
+						"description": "Get list of GitHub repositories with filtering"
+					},
+					"response": []
+				},
+				{
+					"name": "Repository Detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/github-repos/1/",
+						"description": "Get detailed information for a specific repository"
+					},
+					"response": []
+				},
+				{
+					"name": "Repository Summary",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/github-repos/summary/?technology=react&activity_level=medium",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"github-repos",
+								"summary",
+								""
+							],
+							"query": [
+								{
+									"key": "technology",
+									"value": "react"
+								},
+								{
+									"key": "activity_level",
+									"value": "medium"
+								}
+							]
+						},
+						"description": "Get summary statistics for GitHub repositories"
+					},
+					"response": []
+				},
+				{
+					"name": "Technology Stats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/github-repos/technology-stats/?limit=15",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"github-repos",
+								"technology-stats",
+								""
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "15"
+								}
+							]
+						},
+						"description": "Get statistics aggregated by technology"
+					},
+					"response": []
+				},
+				{
+					"name": "Activity Analysis",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/github-repos/activity-analysis/?technology=vue",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"github-repos",
+								"activity-analysis",
+								""
+							],
+							"query": [
+								{
+									"key": "technology",
+									"value": "vue"
+								}
+							]
+						},
+						"description": "Get analysis of repository activity levels"
+					},
+					"response": []
+				},
+				{
+					"name": "Popular Repositories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/github-repos/popular-repos/?sort_by=stars&limit=25",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"github-repos",
+								"popular-repos",
+								""
+							],
+							"query": [
+								{
+									"key": "sort_by",
+									"value": "stars"
+								},
+								{
+									"key": "limit",
+									"value": "25"
+								}
+							]
+						},
+						"description": "Get most popular repositories"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "📋 StackOverflow Survey",
+			"item": [
+				{
+					"name": "List Survey Data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/stackoverflow-survey/?year=2024&country=France&limit=50",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"stackoverflow-survey",
+								""
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "2024"
+								},
+								{
+									"key": "country",
+									"value": "France"
+								},
+								{
+									"key": "limit",
+									"value": "50"
+								}
+							]
+						},
+						"description": "Get StackOverflow survey responses with filtering"
+					},
+					"response": []
+				},
+				{
+					"name": "Survey Response Detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/stackoverflow-survey/1/",
+						"description": "Get detailed survey response information"
+					},
+					"response": []
+				},
+				{
+					"name": "Survey Summary",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/stackoverflow-survey/summary/?year=2024&experience_level=mid",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"stackoverflow-survey",
+								"summary",
+								""
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "2024"
+								},
+								{
+									"key": "experience_level",
+									"value": "mid"
+								}
+							]
+						},
+						"description": "Get summary statistics for survey data"
+					},
+					"response": []
+				},
+				{
+					"name": "Technology Trends",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/stackoverflow-survey/tech-trends/?limit=20",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"stackoverflow-survey",
+								"tech-trends",
+								""
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						},
+						"description": "Get technology trends from survey data"
+					},
+					"response": []
+				},
+				{
+					"name": "Role Analysis",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/stackoverflow-survey/developer-roles/?salary_min=50000",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"stackoverflow-survey",
+								"developer-roles",
+								""
+							],
+							"query": [
+								{
+									"key": "salary_min",
+									"value": "50000"
+								}
+							]
+						},
+						"description": "Get analysis by job roles"
+					},
+					"response": []
+				},
+				{
+					"name": "Salary Analysis",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/stackoverflow-survey/salary-analysis/?currency=USD&experience_min=5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"stackoverflow-survey",
+								"salary-analysis",
+								""
+							],
+							"query": [
+								{
+									"key": "currency",
+									"value": "USD"
+								},
+								{
+									"key": "experience_min",
+									"value": "5"
+								}
+							]
+						},
+						"description": "Get salary analysis from survey data"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "💼 Adzuna Jobs",
+			"item": [
+				{
+					"name": "List Job Data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/adzuna-jobs/?country_code=FR&job_title=developer&average_salary_min=50000",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"adzuna-jobs",
+								""
+							],
+							"query": [
+								{
+									"key": "country_code",
+									"value": "FR"
+								},
+								{
+									"key": "job_title",
+									"value": "developer"
+								},
+								{
+									"key": "average_salary_min",
+									"value": "50000"
+								}
+							]
+						},
+						"description": "Get Adzuna job market data with filtering"
+					},
+					"response": []
+				},
+				{
+					"name": "Job Detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/adzuna-jobs/1/",
+						"description": "Get detailed job information"
+					},
+					"response": []
+				},
+				{
+					"name": "Job Market Summary",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/adzuna-jobs/summary/?country_code=GB&date_from=2024-01-01",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"adzuna-jobs",
+								"summary",
+								""
+							],
+							"query": [
+								{
+									"key": "country_code",
+									"value": "GB"
+								},
+								{
+									"key": "date_from",
+									"value": "2024-01-01"
+								}
+							]
+						},
+						"description": "Get comprehensive job market summary"
+					},
+					"response": []
+				},
+				{
+					"name": "Jobs by Country",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/adzuna-jobs/by-country/?limit=10&date_from=2024-01-01",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"adzuna-jobs",
+								"by-country",
+								""
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "date_from",
+									"value": "2024-01-01"
+								}
+							]
+						},
+						"description": "Get job market statistics by country"
+					},
+					"response": []
+				},
+				{
+					"name": "Job Title Analysis",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/adzuna-jobs/job-analysis/?country_code=DE&limit=15",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"adzuna-jobs",
+								"job-analysis",
+								""
+							],
+							"query": [
+								{
+									"key": "country_code",
+									"value": "DE"
+								},
+								{
+									"key": "limit",
+									"value": "15"
+								}
+							]
+						},
+						"description": "Get detailed analysis of job titles"
+					},
+					"response": []
+				},
+				{
+					"name": "Salary Analysis",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/adzuna-jobs/salary-analysis/?country_code=US",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"adzuna-jobs",
+								"salary-analysis",
+								""
+							],
+							"query": [
+								{
+									"key": "country_code",
+									"value": "US"
+								}
+							]
+						},
+						"description": "Get comprehensive salary analysis"
+					},
+					"response": []
+				},
+				{
+					"name": "Time Series Analysis",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/adzuna-jobs/time-series/?job_title=python&group_by=month",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"adzuna-jobs",
+								"time-series",
+								""
+							],
+							"query": [
+								{
+									"key": "job_title",
+									"value": "python"
+								},
+								{
+									"key": "group_by",
+									"value": "month"
+								}
+							]
+						},
+						"description": "Get time series data for job market evolution"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🇪🇺 EuroTechJobs",
+			"item": [
+				{
+					"name": "List EuroTech Jobs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/eurotechjobs/?location=Berlin&technology=React&salary_min=60000",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"eurotechjobs",
+								""
+							],
+							"query": [
+								{
+									"key": "location",
+									"value": "Berlin"
+								},
+								{
+									"key": "technology",
+									"value": "React"
+								},
+								{
+									"key": "salary_min",
+									"value": "60000"
+								}
+							]
+						},
+						"description": "Get EuroTechJobs listings with filtering"
+					},
+					"response": []
+				},
+				{
+					"name": "EuroTech Job Detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/eurotechjobs/1/",
+						"description": "Get detailed EuroTech job information"
+					},
+					"response": []
+				},
+				{
+					"name": "EuroTech Summary",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/eurotechjobs/summary/?country=Germany&job_type=remote",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"eurotechjobs",
+								"summary",
+								""
+							],
+							"query": [
+								{
+									"key": "country",
+									"value": "Germany"
+								},
+								{
+									"key": "job_type",
+									"value": "remote"
+								}
+							]
+						},
+						"description": "Get EuroTech job market summary"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🔶 Analysis (Gold Layer)",
+			"item": [
+				{
+					"name": "Technology Activity List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/analysis/tech-activity/?technology=python&country=FR&date_from=2024-01-01",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"analysis",
+								"tech-activity",
+								""
+							],
+							"query": [
+								{
+									"key": "technology",
+									"value": "python"
+								},
+								{
+									"key": "country",
+									"value": "FR"
+								},
+								{
+									"key": "date_from",
+									"value": "2024-01-01"
+								}
+							]
+						},
+						"description": "Get technology activity analysis from gold layer"
+					},
+					"response": []
+				},
+				{
+					"name": "Technology Activity Detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/analysis/tech-activity/1/",
+						"description": "Get detailed technology activity information"
+					},
+					"response": []
+				},
+				{
+					"name": "Technology Statistics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/analysis/technology-stats/",
+						"description": "Get comprehensive technology statistics across all sources"
+					},
+					"response": []
+				},
+				{
+					"name": "Technology Trends",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/analysis/tech-trends/?technology=javascript&limit=20",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"analysis",
+								"tech-trends",
+								""
+							],
+							"query": [
+								{
+									"key": "technology",
+									"value": "javascript"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						},
+						"description": "Get technology trends over time"
+					},
+					"response": []
+				},
+				{
+					"name": "Technology Popularity Ranking",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/analysis/popularity-ranking/",
+						"description": "Get technology popularity ranking based on combined metrics"
+					},
+					"response": []
+				},
+				{
+					"name": "Job Market List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/analysis/job-market/?country=GB&min_salary=50000&job_type=full_time",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"analysis",
+								"job-market",
+								""
+							],
+							"query": [
+								{
+									"key": "country",
+									"value": "GB"
+								},
+								{
+									"key": "min_salary",
+									"value": "50000"
+								},
+								{
+									"key": "job_type",
+									"value": "full_time"
+								}
+							]
+						},
+						"description": "Get job market analysis from gold layer"
+					},
+					"response": []
+				},
+				{
+					"name": "Job Market Detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/analysis/job-market/1/",
+						"description": "Get detailed job market information"
+					},
+					"response": []
+				},
+				{
+					"name": "Market Summary",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/analysis/market-summary/",
+						"description": "Get comprehensive job market summary from all sources"
+					},
+					"response": []
+				},
+				{
+					"name": "Country Statistics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/analysis/country-stats/",
+						"description": "Get statistics by country from gold layer"
+					},
+					"response": []
+				},
+				{
+					"name": "Company Statistics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/analysis/company-stats/?min_jobs=5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"analysis",
+								"company-stats",
+								""
+							],
+							"query": [
+								{
+									"key": "min_jobs",
+									"value": "5"
+								}
+							]
+						},
+						"description": "Get statistics by company from gold layer"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🔐 Authentication & User Management",
+			"item": [
+				{
+					"name": "Get CSRF Token",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/auth/user/",
+						"description": "Get CSRF token from cookies (if needed)\n\nThis endpoint returns CSRF token in cookies that can be used for subsequent requests"
+					},
+					"response": []
+				},
+				{
+					"name": "Session Login (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin123\"\n}"
+						},
+						"url": "{{base_url}}/api/auth/login/",
+						"description": "Session-based login for admin user (full access)\n\nTest credentials:\n- Username: admin\n- Password: admin123\n\nProvides full access to all endpoints including analytics"
+					},
+					"response": []
+				},
+				{
+					"name": "Session Login (User)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"user\",\n    \"password\": \"user123\"\n}"
+						},
+						"url": "{{base_url}}/api/auth/login/",
+						"description": "Session-based login for regular user (read-only access)\n\nTest credentials:\n- Username: user\n- Password: user123\n\nProvides read-only access to list/detail endpoints only"
+					},
+					"response": []
+				},
+				{
+					"name": "JWT Login (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin123\"\n}"
+						},
+						"url": "{{base_url}}/api/auth/jwt/login/",
+						"description": "JWT-based login for admin user - returns access and refresh tokens\n\nTest credentials:\n- Username: admin\n- Password: admin123\n\nResponse includes:\n- access: JWT access token\n- refresh: JWT refresh token\n- user: User information\n\nUse access token in Authorization header: Bearer <access_token>"
+					},
+					"response": []
+				},
+				{
+					"name": "JWT Login (User)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"user\",\n    \"password\": \"user123\"\n}"
+						},
+						"url": "{{base_url}}/api/auth/jwt/login/",
+						"description": "JWT-based login for regular user - returns access and refresh tokens\n\nTest credentials:\n- Username: user\n- Password: user123\n\nResponse includes:\n- access: JWT access token\n- refresh: JWT refresh token\n- user: User information\n\nUse access token in Authorization header: Bearer <access_token>"
+					},
+					"response": []
+				},
+				{
+					"name": "JWT Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh\": \"{{refresh_token}}\"\n}"
+						},
+						"url": "{{base_url}}/api/auth/jwt/refresh/",
+						"description": "Refresh JWT access token using refresh token\n\nProvide the refresh token from JWT login response\n\nReturns new access token that can be used for authentication"
+					},
+					"response": []
+				},
+				{
+					"name": "Session Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": "{{base_url}}/api/auth/logout/",
+						"description": "Logout from current session (session-based authentication)\n\nRequires active session from session login\n\nClears the session authentication"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Current User Info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/auth/user/",
+						"description": "Get current authenticated user information and access level\n\nWorks with both session and JWT authentication\n\nFor session auth: Must be logged in via session\nFor JWT auth: Add Authorization header with Bearer <access_token>\n\nReturns user info, role, and access level"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Current User Info (JWT)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"description": "Replace {{access_token}} with actual JWT access token from login"
+							}
+						],
+						"url": "{{base_url}}/api/auth/user/",
+						"description": "Get current authenticated user information using JWT authentication\n\nRequires Bearer token in Authorization header\n\nGet token from JWT login response\n\nReturns detailed user information including role and permissions"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refresh_token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
