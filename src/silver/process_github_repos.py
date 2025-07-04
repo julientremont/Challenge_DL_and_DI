@@ -4,6 +4,7 @@ import glob
 import logging
 
 from src.utils.sqlmanager import sql_manager
+from src.utils.mysql_schemas import create_table
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -127,40 +128,13 @@ class GitHubReposSilverProcessor:
         return quality_score.clip(lower=0, upper=100)
     
     def create_mysql_table(self):
-        """Create MySQL table for silver layer data"""
-        create_table_sql = f"""
-        CREATE TABLE IF NOT EXISTS {self.table_name} (
-            id BIGINT PRIMARY KEY,
-            name VARCHAR(255) NOT NULL,
-            name_cleaned VARCHAR(255) NOT NULL,
-            technology_normalized VARCHAR(100) NOT NULL,
-            search_type VARCHAR(50) NOT NULL,
-            stars_count INT NOT NULL DEFAULT 0,
-            forks_count INT NOT NULL DEFAULT 0,
-            watchers_count INT NOT NULL DEFAULT 0,
-            open_issues_count INT NOT NULL DEFAULT 0,
-            created_at_cleaned DATETIME NOT NULL,
-            collected_at_cleaned DATETIME NOT NULL,
-            popularity_score DECIMAL(12,2) NOT NULL DEFAULT 0,
-            days_since_creation INT NOT NULL DEFAULT 0,
-            activity_score DECIMAL(12,2) NOT NULL DEFAULT 0,
-            activity_level ENUM('low', 'medium', 'high') NOT NULL DEFAULT 'low',
-            processed_at DATETIME NOT NULL,
-            data_quality_score TINYINT NOT NULL DEFAULT 0,
-            
-            INDEX idx_technology (technology_normalized),
-            INDEX idx_activity_level (activity_level),
-            INDEX idx_created_at (created_at_cleaned),
-            INDEX idx_popularity (popularity_score DESC),
-            INDEX idx_quality (data_quality_score DESC)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
-        """
-        
-        with sql_manager.get_connection() as conn:
-            cursor = conn.cursor()
-            cursor.execute(create_table_sql)
-            conn.commit()
+        """Create MySQL table for silver layer data using centralized schema"""
+        success = create_table(self.table_name)
+        if success:
             logger.info(f"Created/verified table: {self.table_name}")
+        else:
+            logger.error(f"Failed to create table: {self.table_name}")
+            raise Exception(f"Failed to create table: {self.table_name}")
     
     def save_to_mysql(self, df: pd.DataFrame):
         """Save cleaned data to MySQL"""

@@ -8,6 +8,7 @@ import pycountry
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 from src.utils.sqlmanager import sql_manager
+from src.utils.mysql_schemas import create_table
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -361,48 +362,13 @@ class EuroTechJobsSilverProcessor:
         return quality_score.clip(lower=0, upper=100)
     
     def create_mysql_table(self):
-        """Create MySQL table for EuroTechJobs silver layer data"""
-        create_table_sql = f"""
-        CREATE TABLE IF NOT EXISTS {self.table_name} (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            
-            job_title VARCHAR(500),
-            job_title_category VARCHAR(255),
-            company VARCHAR(255),
-            
-            location VARCHAR(255),
-            country_code VARCHAR(3),
-            
-            technologies TEXT,
-            primary_technology VARCHAR(100),
-            tech_count INT DEFAULT 0,
-            
-            job_type VARCHAR(50),
-            category VARCHAR(100),
-            url VARCHAR(1000),
-            
-            processed_at DATETIME NOT NULL,
-            data_quality_score TINYINT DEFAULT 0,
-            
-            INDEX idx_country (country_code),
-            INDEX idx_job_title (job_title(255)),
-            INDEX idx_job_title_category (job_title_category),
-            INDEX idx_company (company),
-            INDEX idx_primary_tech (primary_technology),
-            INDEX idx_job_type (job_type),
-            INDEX idx_category (category),
-            INDEX idx_quality_score (data_quality_score DESC),
-            INDEX idx_processed_at (processed_at DESC),
-            FULLTEXT INDEX ft_technologies (technologies),
-            UNIQUE KEY unique_job_url (url(767))
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
-        """
-        
-        with sql_manager.get_connection() as conn:
-            cursor = conn.cursor()
-            cursor.execute(create_table_sql)
-            conn.commit()
+        """Create MySQL table for EuroTechJobs silver layer data using centralized schema"""
+        success = create_table(self.table_name)
+        if success:
             logger.info(f"Created/verified table: {self.table_name}")
+        else:
+            logger.error(f"Failed to create table: {self.table_name}")
+            raise Exception(f"Failed to create table: {self.table_name}")
     
     def save_to_mysql(self, df: pd.DataFrame):
         """Save cleaned data to MySQL using sqlmanager"""

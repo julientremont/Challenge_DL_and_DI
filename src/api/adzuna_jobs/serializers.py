@@ -1,51 +1,68 @@
 from rest_framework import serializers
-from .models import AdzunaJob, AdzunaJobCategory
+from .models import AdzunaJobSilver
 
 
-class AdzunaJobSerializer(serializers.ModelSerializer):
+class AdzunaJobSilverSerializer(serializers.ModelSerializer):
+    """Serializer for Adzuna Jobs Silver data"""
+    has_salary_data = serializers.ReadOnlyField()
+    quality_level = serializers.ReadOnlyField()
+    
     class Meta:
-        model = AdzunaJob
-        fields = '__all__'
-        read_only_fields = ['id', 'created_at', 'updated_at']
+        model = AdzunaJobSilver
+        fields = [
+            'id', 'date', 'job_title', 'country_code', 'country_name',
+            'average_salary', 'salary_range', 'job_count', 'processed_at',
+            'data_quality_score', 'has_salary_data', 'quality_level'
+        ]
+        read_only_fields = ['id', 'processed_at']
 
 
 class AdzunaJobSummarySerializer(serializers.Serializer):
-    """Serializer for aggregated job data"""
+    """Serializer for aggregated job market data"""
+    total_records = serializers.IntegerField()
+    unique_job_titles = serializers.IntegerField()
+    countries_covered = serializers.IntegerField()
+    total_job_count = serializers.IntegerField()
+    avg_salary = serializers.DecimalField(max_digits=12, decimal_places=2, allow_null=True)
+    salary_ranges_available = serializers.IntegerField()
+    data_quality_avg = serializers.FloatField()
+    date_range = serializers.DictField()
+
+
+class JobMarketByCountrySerializer(serializers.Serializer):
+    """Serializer for job market statistics by country"""
+    country_code = serializers.CharField()
+    country_name = serializers.CharField()
     total_jobs = serializers.IntegerField()
-    countries_count = serializers.IntegerField()
-    avg_salary_min = serializers.DecimalField(max_digits=12, decimal_places=2)
-    avg_salary_max = serializers.DecimalField(max_digits=12, decimal_places=2)
-    top_companies = serializers.ListField(child=serializers.CharField())
-    top_locations = serializers.ListField(child=serializers.CharField())
+    unique_job_titles = serializers.IntegerField()
+    avg_salary = serializers.DecimalField(max_digits=12, decimal_places=2, allow_null=True)
+    most_common_job = serializers.CharField()
+    data_quality_avg = serializers.FloatField()
 
 
-class JobsByLocationSerializer(serializers.Serializer):
-    """Serializer for jobs grouped by location"""
-    location = serializers.CharField()
-    country = serializers.CharField()
-    job_count = serializers.IntegerField()
-    avg_salary_min = serializers.DecimalField(max_digits=12, decimal_places=2)
-    avg_salary_max = serializers.DecimalField(max_digits=12, decimal_places=2)
+class JobTitleAnalysisSerializer(serializers.Serializer):
+    """Serializer for job title market analysis"""
+    job_title = serializers.CharField()
+    total_opportunities = serializers.IntegerField()
+    countries_available = serializers.IntegerField()
+    avg_salary = serializers.DecimalField(max_digits=12, decimal_places=2, allow_null=True)
+    salary_ranges = serializers.ListField(child=serializers.CharField())
+    data_quality_avg = serializers.FloatField()
 
 
-class JobsByCompanySerializer(serializers.Serializer):
-    """Serializer for jobs grouped by company"""
-    company = serializers.CharField()
-    job_count = serializers.IntegerField()
-    avg_salary_min = serializers.DecimalField(max_digits=12, decimal_places=2)
-    locations = serializers.ListField(child=serializers.CharField())
-
-
-class SalaryTrendsSerializer(serializers.Serializer):
+class SalaryAnalysisSerializer(serializers.Serializer):
     """Serializer for salary trend analysis"""
-    job_type = serializers.CharField()
-    experience_level = serializers.CharField()
-    avg_salary_min = serializers.DecimalField(max_digits=12, decimal_places=2)
-    avg_salary_max = serializers.DecimalField(max_digits=12, decimal_places=2)
+    salary_range = serializers.CharField()
     job_count = serializers.IntegerField()
+    countries = serializers.ListField(child=serializers.CharField())
+    popular_job_titles = serializers.ListField(child=serializers.CharField())
+    avg_numerical_salary = serializers.DecimalField(max_digits=12, decimal_places=2, allow_null=True)
 
 
-class AdzunaJobCategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AdzunaJobCategory
-        fields = '__all__'
+class TimeSeriesJobDataSerializer(serializers.Serializer):
+    """Serializer for time series job market data"""
+    date = serializers.DateField()
+    total_jobs = serializers.IntegerField()
+    unique_job_titles = serializers.IntegerField()
+    countries_active = serializers.IntegerField()
+    avg_salary = serializers.DecimalField(max_digits=12, decimal_places=2, allow_null=True)

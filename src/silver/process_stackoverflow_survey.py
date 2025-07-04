@@ -4,6 +4,7 @@ import glob
 import logging
 
 from src.utils.sqlmanager import sql_manager
+from src.utils.mysql_schemas import create_table
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -194,38 +195,13 @@ class StackOverflowSurveySilverProcessor:
         return quality_score.clip(lower=0, upper=100)
     
     def create_mysql_table(self):
-        """Create MySQL table for tech market focused silver layer data"""
-        create_table_sql = f"""
-        CREATE TABLE IF NOT EXISTS {self.table_name} (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            survey_year INT NOT NULL,
-            country_normalized VARCHAR(100),
-            primary_role VARCHAR(255),
-            education_normalized VARCHAR(100),
-            salary_usd_cleaned DECIMAL(10,2),
-            salary_range VARCHAR(50),
-            
-            technologies_used TEXT,
-            primary_language VARCHAR(100),
-            
-            processed_at DATETIME NOT NULL,
-            data_quality_score TINYINT DEFAULT 0,
-            
-            INDEX idx_survey_year (survey_year),
-            INDEX idx_country (country_normalized),
-            INDEX idx_role (primary_role),
-            INDEX idx_salary_range (salary_range),
-            INDEX idx_primary_language (primary_language),
-            INDEX idx_quality_score (data_quality_score DESC),
-            FULLTEXT INDEX ft_technologies (technologies_used)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
-        """
-        
-        with sql_manager.get_connection() as conn:
-            cursor = conn.cursor()
-            cursor.execute(create_table_sql)
-            conn.commit()
+        """Create MySQL table for tech market focused silver layer data using centralized schema"""
+        success = create_table(self.table_name)
+        if success:
             logger.info(f"Created/verified table: {self.table_name}")
+        else:
+            logger.error(f"Failed to create table: {self.table_name}")
+            raise Exception(f"Failed to create table: {self.table_name}")
     
     def save_to_mysql(self, df: pd.DataFrame):
         """Save cleaned data to MySQL"""
