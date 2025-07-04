@@ -5,7 +5,7 @@ import sys
 from calendar import monthrange
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 from src.utils.sparkmanager import spark_manager
-from datetime import datetime, timedelta
+from datetime import datetime
 import time
 import random
 

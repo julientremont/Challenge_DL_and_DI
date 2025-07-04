@@ -6,8 +6,7 @@ import time
 import logging
 from datetime import datetime
 from typing import List, Dict, Any, Optional
-from urllib.parse import urljoin
-import re
+
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)

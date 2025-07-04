@@ -12,8 +12,4 @@ urlpatterns = [
     path('country-analysis/', views.country_trends_analysis, name='trends-country-analysis'),
     path('time-series/', views.trends_time_series, name='trends-time-series'),
     path('tech-analysis/', views.tech_trends_analysis, name='trends-tech-analysis'),
-    
-    # Legacy endpoints (for backward compatibility)
-    path('legacy/', views.TrendsFRListView.as_view(), name='trends-legacy-list'),
-    path('legacy/<int:pk>/', views.TrendsFRDetailView.as_view(), name='trends-legacy-detail'),
 ]

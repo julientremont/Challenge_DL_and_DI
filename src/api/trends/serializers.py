@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import TrendsSilver, TrendsFR
+from .models import TrendsSilver
 
 
 class TrendsSilverSerializer(serializers.ModelSerializer):
@@ -66,11 +66,3 @@ class TechTrendsAnalysisSerializer(serializers.Serializer):
     growth_rate = serializers.FloatField()
     countries_interested = serializers.ListField(child=serializers.CharField())
     peak_periods = serializers.ListField(child=serializers.DateField())
-
-
-# Legacy serializer for backward compatibility
-class TrendsFRSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TrendsFR
-        fields = ['id', 'country_code', 'date', 'keyword', 'search_frequency', 'country']
-        read_only_fields = ['id']

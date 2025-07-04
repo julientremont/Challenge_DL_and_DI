@@ -123,10 +123,7 @@ class MySQLSchemaManager:
                 'date DATE NOT NULL',
                 'job_title VARCHAR(255) NOT NULL',
                 'country_code VARCHAR(5) NOT NULL',
-                'country_name VARCHAR(100) NOT NULL',
                 'average_salary DECIMAL(10,2)',
-                'salary_range VARCHAR(50)',
-                'job_count INT NOT NULL DEFAULT 0',
                 'processed_at DATETIME NOT NULL',
                 'data_quality_score TINYINT DEFAULT 0'
             ],

@@ -10,9 +10,8 @@ class AdzunaJobSilverSerializer(serializers.ModelSerializer):
     class Meta:
         model = AdzunaJobSilver
         fields = [
-            'id', 'date', 'job_title', 'country_code', 'country_name',
-            'average_salary', 'salary_range', 'job_count', 'processed_at',
-            'data_quality_score', 'has_salary_data', 'quality_level'
+            'id', 'job_title', 'country_code', 'date', 'average_salary', 
+            'processed_at', 'data_quality_score', 'has_salary_data', 'quality_level'
         ]
         read_only_fields = ['id', 'processed_at']
 
@@ -24,7 +23,6 @@ class AdzunaJobSummarySerializer(serializers.Serializer):
     countries_covered = serializers.IntegerField()
     total_job_count = serializers.IntegerField()
     avg_salary = serializers.DecimalField(max_digits=12, decimal_places=2, allow_null=True)
-    salary_ranges_available = serializers.IntegerField()
     data_quality_avg = serializers.FloatField()
     date_range = serializers.DictField()
 
@@ -32,7 +30,6 @@ class AdzunaJobSummarySerializer(serializers.Serializer):
 class JobMarketByCountrySerializer(serializers.Serializer):
     """Serializer for job market statistics by country"""
     country_code = serializers.CharField()
-    country_name = serializers.CharField()
     total_jobs = serializers.IntegerField()
     unique_job_titles = serializers.IntegerField()
     avg_salary = serializers.DecimalField(max_digits=12, decimal_places=2, allow_null=True)
@@ -46,13 +43,11 @@ class JobTitleAnalysisSerializer(serializers.Serializer):
     total_opportunities = serializers.IntegerField()
     countries_available = serializers.IntegerField()
     avg_salary = serializers.DecimalField(max_digits=12, decimal_places=2, allow_null=True)
-    salary_ranges = serializers.ListField(child=serializers.CharField())
     data_quality_avg = serializers.FloatField()
 
 
 class SalaryAnalysisSerializer(serializers.Serializer):
     """Serializer for salary trend analysis"""
-    salary_range = serializers.CharField()
     job_count = serializers.IntegerField()
     countries = serializers.ListField(child=serializers.CharField())
     popular_job_titles = serializers.ListField(child=serializers.CharField())

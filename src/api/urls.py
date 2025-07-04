@@ -51,6 +51,11 @@ def api_root(request):
             'eurotechjobs': {
                 'base_url': '/api/eurotechjobs/',
                 'endpoints': ['/', '/summary/', '/country-stats/', '/technology-stats/', '/job-type-analysis/', '/time-series/', '/company-analysis/']
+            },
+            'analysis': {
+                'base_url': '/api/analysis/',
+                'endpoints': ['tech-activity/', 'job-market/', 'tech-activity/technology_stats/', 'tech-activity/tech_trends/', 'job-market/market_summary/', 'job-market/country_stats/'],
+                'description': 'Cross-source analytics from Gold data warehouse'
             }
         }
     })
@@ -73,6 +78,7 @@ urlpatterns = [
     path('api/adzuna-jobs/', include('src.api.adzuna_jobs.urls')),
     path('api/github-repos/', include('src.api.github_jobs.urls')),
     path('api/eurotechjobs/', include('src.api.eurotechjobs.urls')),
+    path('api/analysis/', include('src.api.analysis.urls')),
     
     # Swagger/OpenAPI URLs
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),

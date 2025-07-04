@@ -7,7 +7,8 @@ from django.db.models import Avg, Sum, Max, Min, Count, Q, F
 from django.db.models.functions import TruncDate, TruncMonth
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from drf_spectacular.openapi import OpenApiTypes
-from .models import TrendsSilver, TrendsFR
+
+from .models import TrendsSilver
 from .serializers import (
     TrendsSilverSerializer,
     TrendsSummarySerializer,
@@ -15,7 +16,6 @@ from .serializers import (
     CountryTrendsSerializer,
     TrendsTimeSeriesSerializer,
     TechTrendsAnalysisSerializer,
-    TrendsFRSerializer
 )
 from ..permissions import AdminOnlyPermission, AuthenticatedReadOnlyPermission
 
@@ -32,21 +32,6 @@ class TrendsSilverFilter(filters.FilterSet):
     
     class Meta:
         model = TrendsSilver
-        fields = ['country_code', 'keyword', 'date_from', 'date_to', 'search_frequency_min', 'search_frequency_max']
-
-
-# Legacy filter for backward compatibility
-class TrendsFRFilter(filters.FilterSet):
-    """Custom filter for TrendsFR model"""
-    date_from = filters.DateFilter(field_name='date', lookup_expr='gte')
-    date_to = filters.DateFilter(field_name='date', lookup_expr='lte')
-    keyword = filters.CharFilter(field_name='keyword', lookup_expr='icontains')
-    country_code = filters.CharFilter(field_name='country_code', lookup_expr='exact')
-    search_frequency_min = filters.NumberFilter(field_name='search_frequency', lookup_expr='gte')
-    search_frequency_max = filters.NumberFilter(field_name='search_frequency', lookup_expr='lte')
-    
-    class Meta:
-        model = TrendsFR
         fields = ['country_code', 'keyword', 'date_from', 'date_to', 'search_frequency_min', 'search_frequency_max']
 
 
@@ -67,27 +52,6 @@ class TrendsSilverDetailView(generics.RetrieveAPIView):
     """Retrieve a specific trend record from silver layer"""
     queryset = TrendsSilver.objects.all()
     serializer_class = TrendsSilverSerializer
-    permission_classes = [AuthenticatedReadOnlyPermission]
-
-
-# Legacy views for backward compatibility
-@extend_schema(tags=['Google Trends - Legacy'])
-class TrendsFRListView(generics.ListAPIView):
-    """List all trends data with filtering and pagination (Legacy)"""
-    queryset = TrendsFR.objects.all()
-    serializer_class = TrendsFRSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_class = TrendsFRFilter
-    ordering_fields = ['date', 'search_frequency', 'keyword']
-    ordering = ['-date']
-    permission_classes = [AuthenticatedReadOnlyPermission]
-
-
-@extend_schema(tags=['Google Trends - Legacy'])
-class TrendsFRDetailView(generics.RetrieveAPIView):
-    """Retrieve a specific trend record (Legacy)"""
-    queryset = TrendsFR.objects.all()
-    serializer_class = TrendsFRSerializer
     permission_classes = [AuthenticatedReadOnlyPermission]
 
 

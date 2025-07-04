@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'src.api.adzuna_jobs',
     'src.api.github_jobs',
     'src.api.eurotechjobs',
+    'src.api.analysis',
 ]
 
 MIDDLEWARE = [
@@ -74,8 +75,23 @@ DATABASES = {
             'charset': 'utf8mb4',
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         },
+    },
+    'gold': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'gold',
+        'USER': os.getenv('MYSQL_USER', 'tatane'),
+        'PASSWORD': os.getenv('MYSQL_PASSWORD', 'tatane'),
+        'HOST': os.getenv('MYSQL_HOST', 'localhost'),
+        'PORT': os.getenv('MYSQL_PORT', '3306'),
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
     }
 }
+
+# Database routers
+DATABASE_ROUTERS = ['src.api.analysis.db_router.AnalysisDBRouter']
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -176,6 +192,10 @@ SPECTACULAR_SETTINGS = {
         {
             'name': 'Authentication',
             'description': 'Authentification - Points de terminaison pour l\'authentification des utilisateurs, y compris la connexion et la gestion des jetons JWT'
+        },
+        {
+            'name': 'Analysis',
+            'description': 'Analyses croisées - Entrepôt de données Gold avec analyses cross-sources sur les technologies, emplois, et tendances du marché tech européen'
         }
     ],
     'PREPROCESSING_HOOKS': [],

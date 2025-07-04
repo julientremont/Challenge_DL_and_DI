@@ -17,8 +17,6 @@ CREATE TABLE silver.it_jobs_salary (
     country VARCHAR(100) NOT NULL,
     country_code VARCHAR(10) NOT NULL,
     job_title VARCHAR(100) NOT NULL,
-    job_count DECIMAL(10,1),
-    salary_range INT,
 	date DATE NOT NULL
 );
 

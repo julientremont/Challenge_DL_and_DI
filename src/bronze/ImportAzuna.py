@@ -1,6 +1,4 @@
 from pyspark.sql.functions import col, year, month, dayofmonth, to_date
-from pytrends.request import TrendReq
-from calendar import monthrange
 from datetime import datetime
 import requests
 import os
@@ -151,7 +149,7 @@ for key in pays_europeens.keys():
         }
         data_final.append(data_point)  # Ajouter à la liste
     
-    output_path = f"./data/bronze/azuna/Salary/{key}"
+    output_path = f"../../data/bronze/azuna/Salary/{key}"
     json_to_parquet(data_final, output_path)
 
 print("Récupération des données histograme d'Azuna...")
@@ -169,5 +167,5 @@ for key in pays_europeens.keys():
                 "date": current_date 
             }
             data_final.append(data_point)  # Ajouter à la liste
-        output_path = f"./data/bronze/azuna/Dispertion/{key}"
+        output_path = f"../../data/bronze/azuna/Dispertion/{key}"
         json_to_parquet(data_final, output_path)
