@@ -79,6 +79,16 @@ def run_bronze_layer(sources_config):
             logger.info("⚠️ EuroTechJobs collection not implemented yet")
         except Exception as e:
             logger.error(f"❌ EuroTechJobs collection failed: {e}")
+
+        # jobicy
+        if sources_config.get('jobicy', True):
+            try:
+                logger.info("🇪🇺 Collecting jobicy data...")
+                from src.bronze.import_jobicy import get_api as jobicy_main
+                jobicy_main()
+                logger.info("✅ jobicy collection completed")
+            except Exception as e:
+                logger.error(f"❌ jobicy collection failed: {e}")
     
     logger.info("🔹 Bronze Layer Collection Completed")
 
@@ -135,7 +145,17 @@ def run_silver_layer(sources_config):
             logger.info("⚠️ EuroTechJobs Silver processing not implemented yet")
         except Exception as e:
             logger.error(f"❌ EuroTechJobs Silver processing failed: {e}")
-    
+
+    # jobicy
+    if sources_config.get('jobicy', True):
+        try:
+            logger.info("🇪🇺 Processing jobicy to silver...")
+            from src.silver.JobicySilver import clean_jobicy as jobicy_main
+            jobicy_main()
+            logger.info("✅ jobicy processing completed")
+        except Exception as e:
+            logger.error(f"❌ jobicy processing failed: {e}")
+
     logger.info("🔸 Silver Layer Processing Completed")
 
 def run_gold_layer(sources_config):
@@ -199,7 +219,8 @@ def main():
         'adzuna': not args.skip_adzuna,
         'github': not args.skip_github,
         'stackoverflow': not args.skip_stackoverflow,
-        'eurotechjobs': not args.skip_eurotechjobs
+        'eurotechjobs': not args.skip_eurotechjobs,
+        'jobicy': not args.skip_jobicy,
     }
     
     logger.info("🚀 Starting Challenge DL & DI Pipeline")
