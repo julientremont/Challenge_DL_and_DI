@@ -133,39 +133,41 @@ def json_to_parquet(donnees_json, chemin_sortie):
     
     spark_manager.write_parquet(df_avec_dates, chemin_sortie, mode="overwrite", partition_by=["annee_insertion", "mois_insertion"])
 
-
-print("Récupération des données historique d'Azuna...")
-for key in pays_europeens.keys():
-    time.sleep(3)
-    json_data = get_azuna_histo(pays_europeens, key)
-    print("Données récupérées avec succès.")
-    data_final = []
-    for date, salary_value in json_data['month'].items():
-        data_point = {
-            "keyword": 'it-jobs',
-            "country": pays_europeens[key],
-            "date": date,
-            "average_salary":  float(salary_value)
-        }
-        data_final.append(data_point)  # Ajouter à la liste
-    
-    output_path = f"../../data/bronze/azuna/Salary/{key}"
-    json_to_parquet(data_final, output_path)
-
-print("Récupération des données histograme d'Azuna...")
-for key in pays_europeens.keys():
-        json_data = get_azuna_dispertion(key)
+def main():
+    print("Récupération des données historique d'Azuna...")
+    for key in pays_europeens.keys():
+        time.sleep(3)
+        json_data = get_azuna_histo(pays_europeens, key)
         print("Données récupérées avec succès.")
-        histogram = json_data['histogram']
-        current_date = datetime.now().strftime("%Y-%m-%d")
-        for salary_range, count in histogram.items():
+        data_final = []
+        for date, salary_value in json_data['month'].items():
             data_point = {
                 "keyword": 'it-jobs',
                 "country": pays_europeens[key],
-                "salary_range": salary_range,
-                "job_count":  float(count),
-                "date": current_date 
+                "date": date,
+                "average_salary":  float(salary_value)
             }
             data_final.append(data_point)  # Ajouter à la liste
-        output_path = f"../../data/bronze/azuna/Dispertion/{key}"
+        
+        output_path = f"../../data/bronze/azuna/Salary/{key}"
         json_to_parquet(data_final, output_path)
+
+    print("Récupération des données histograme d'Azuna...")
+    for key in pays_europeens.keys():
+            json_data = get_azuna_dispertion(key)
+            print("Données récupérées avec succès.")
+            histogram = json_data['histogram']
+            current_date = datetime.now().strftime("%Y-%m-%d")
+            for salary_range, count in histogram.items():
+                data_point = {
+                    "keyword": 'it-jobs',
+                    "country": pays_europeens[key],
+                    "salary_range": salary_range,
+                    "job_count":  float(count),
+                    "date": current_date 
+                }
+                data_final.append(data_point)  # Ajouter à la liste
+            output_path = f"../../data/bronze/azuna/Dispertion/{key}"
+            json_to_parquet(data_final, output_path)
+if __name__ == "__main__":
+    main()
