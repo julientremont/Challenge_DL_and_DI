@@ -33,12 +33,12 @@ def run_bronze_layer(sources_config):
     # Google Trends
     if sources_config.get('gtrends', True):
         try:
-            logger.info("📊 Collecting Google Trends data...")
+            logger.info("Collecting Google Trends data...")
             from src.bronze.ImportGtrends import main as gtrends_main
             gtrends_main()
-            logger.info("✅ Google Trends collection completed")
+            logger.info("Google Trends collection completed")
         except Exception as e:
-            logger.error(f"❌ Google Trends collection failed: {e}")
+            logger.error(f"Google Trends collection failed: {e}")
     
     # Adzuna Jobs
     if sources_config.get('adzuna', True):
@@ -190,6 +190,7 @@ def main():
     parser.add_argument('--skip-github', action='store_true', help='Skip GitHub Repositories processing')
     parser.add_argument('--skip-stackoverflow', action='store_true', help='Skip StackOverflow Survey processing')
     parser.add_argument('--skip-eurotechjobs', action='store_true', help='Skip EuroTechJobs processing')
+    parser.add_argument('--skip-jobicy', action='store_true', help='Skip Jobicy Jobs processing')
     
     args = parser.parse_args()
     
