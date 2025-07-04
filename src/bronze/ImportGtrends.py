@@ -17,8 +17,8 @@ keywords_techs = [
     
     # Frameworks et bibliothèques web
     'react', 'angular', 'vue.js', 'django',]
-country_codes = [ "CH", "DE", "ES", "GB", "IT", "NL", "PL",]
-""""FR","AT", "BE","""
+
+country_codes = ["FR", "AT", "BE", "CH", "DE", "ES", "GB", "IT", "NL", "PL"]
 
 def get_trends_histo(keywords_techs, country_codes, start_date, end_date):
     pytrend = TrendReq(hl='fr', tz=360)
@@ -96,10 +96,7 @@ def json_to_parquet(json_data, output_path):
     print(f"Les données ont été écrites dans {output_path}")
     spark_manager.write_parquet(df_with_dates, output_path, mode="append", partition_by=["annee_insert", "mois_insert", "jour_insert"])
 
-
-# importer les trends sur une plage donné.
-resulta = get_trends_histo(keywords_techs, country_codes, start_date='2025-06-07', end_date='2025-07-03')
-#yesterday = datetime.now() - timedelta(days=1)
-#date_yesterday = yesterday.strftime('%Y-%m-%d')
-#resulta = get_trends_histo(keywords_techs, country_codes, start_date=date_yesterday, end_date=date_yesterday)
+yesterday = datetime.now() - timedelta(days=1)
+date_yesterday = yesterday.strftime('%Y-%m-%d')
+resulta = get_trends_histo(keywords_techs, country_codes, start_date=date_yesterday, end_date=date_yesterday)
 print("Traitement terminé avec succès !")
