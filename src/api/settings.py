@@ -151,19 +151,31 @@ SPECTACULAR_SETTINGS = {
     'TAGS': [
         {
             'name': 'Google Trends',
-            'description': 'Google Trends data analysis endpoints - Search frequency trends by keyword and country'
+            'description': 'Trends de Google - Données de recherche, tendances de popularité et insights sur les requêtes de recherche'
         },
         {
             'name': 'StackOverflow Survey',
-            'description': 'Developer survey data endpoints - Annual survey responses, developer insights, and technology trends'
+            'description': 'Sondage StackOverflow - Données sur les développeurs, tendances de l\'industrie et statistiques de la communauté des développeurs'
         },
         {
             'name': 'Adzuna Jobs',
-            'description': 'Job market data from Adzuna - Job listings, salary trends, and market analysis'
+            'description': 'Offres d\'emploi Adzuna - Données sur les offres d\'emploi, tendances du marché de l\'emploi et statistiques des offres d\'emploi'
         },
         {
             'name': 'API Info',
-            'description': 'General API information and documentation endpoints'
+            'description': 'Informations sur l\'API - Informations générales sur l\'API, y compris la version, les points de terminaison et les détails de la documentation'
+        },
+        {
+            'name': 'EuroTechJobs',
+            'description': 'Offres d\'emploi EuroTechJobs - Données sur les offres d\'emploi dans le secteur technologique européen, tendances du marché de l\'emploi et statistiques des offres d\'emploi'
+        },
+        {
+            'name': 'GitHub Repositories',
+            'description': 'Offres d\'emploi GitHub - Données sur les offres d\'emploi, tendances du marché de l\'emploi et statistiques des offres d\'emploi'
+        },
+        {
+            'name': 'Authentication',
+            'description': 'Authentification - Points de terminaison pour l\'authentification des utilisateurs, y compris la connexion et la gestion des jetons JWT'
         }
     ],
     'PREPROCESSING_HOOKS': [],
