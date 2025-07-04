@@ -124,6 +124,7 @@ class MySQLSchemaManager:
                 'job_title VARCHAR(255) NOT NULL',
                 'country_code VARCHAR(5) NOT NULL',
                 'average_salary DECIMAL(10,2)',
+                'salary_range INT NOT NULL DEFAULT 0',
                 'processed_at DATETIME NOT NULL',
                 'data_quality_score TINYINT DEFAULT 0'
             ],
@@ -361,17 +362,6 @@ def spark_df_to_sql_tuples(spark_df, table_name: str) -> Tuple[List[str], List[t
         raise
 
 def save_spark_df_to_mysql(spark_df, table_name: str, batch_size: int = 1000) -> int:
-    """
-    Save Spark DataFrame to MySQL table using SQLManager.
-    
-    Args:
-        spark_df: Spark DataFrame to save
-        table_name: Target MySQL table name
-        batch_size: Batch size for bulk insert
-        
-    Returns:
-        Number of rows affected
-    """
     try:
         # Convert DataFrame to SQL format
         columns, data_tuples = spark_df_to_sql_tuples(spark_df, table_name)

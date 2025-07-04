@@ -20,7 +20,6 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 class GTrendsSilverProcessor:
-    """Google Trends silver layer processor using centralized schema and SQLManager"""
     
     def __init__(self):
         self.table_name = "trends_silver"
@@ -36,7 +35,6 @@ class GTrendsSilverProcessor:
         self.country_codes = ["FR", "AT", "BE", "CH", "DE", "ES", "GB", "IT", "NL", "PL"]
 
     def supprimer_lignes_vides(self, df, seuil_pct=0.7):
-        """Remove rows with too many null values"""
         nb_colonnes = len(df.columns)
         null_conditions = []
         
@@ -60,15 +58,12 @@ class GTrendsSilverProcessor:
         return df_final
 
     def get_bronze_parquet(self, spark, output_path):
-        """Read bronze parquet data"""
         return spark.read.parquet(output_path)
 
     def merge_multiple_dataframes_reduce(self, df1, df2):
-        """Merge dataframes using union"""
         return df1.union(df2)
 
     def create_mysql_table(self):
-        """Create MySQL table using centralized schema"""
         success = create_table(self.table_name)
         if success:
             logger.info(f"Created/verified table: {self.table_name}")
@@ -77,7 +72,6 @@ class GTrendsSilverProcessor:
             raise Exception(f"Failed to create table: {self.table_name}")
 
     def save_to_mysql(self, df):
-        """Save dataframe to MySQL using SQLManager via helper function"""
         try:
             affected_rows = save_spark_df_to_mysql(df, self.table_name, batch_size=500)
             logger.info(f"Successfully saved {affected_rows} rows to {self.table_name}")
@@ -85,7 +79,6 @@ class GTrendsSilverProcessor:
             logger.error(f"Error saving to MySQL: {e}")
             raise
     def process(self):
-        """Main processing function for Google Trends data"""
         logger.info("Starting Google Trends silver layer processing...")
         
         # Create table
@@ -140,7 +133,6 @@ class GTrendsSilverProcessor:
             logger.info("Google Trends silver layer processing completed!")
 
 def main():
-    """Main execution function"""
     processor = GTrendsSilverProcessor()
     processor.process()
 
